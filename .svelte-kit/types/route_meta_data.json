@@ -26,6 +26,7 @@
 	],
 	"/verificationDashboard": [
 		"src/routes/verificationDashboard/+page.ts",
+		"src/routes/+layout.js",
 		"src/routes/+layout.js"
 	]
 }
