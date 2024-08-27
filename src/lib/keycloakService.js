@@ -108,7 +108,7 @@ export async function logout() {
           divisionMaster.set([]);
           // Perform any additional cleanup if necessary
           // console.log("Logged out successfully");
-          goto("https://hsc_verificationstaff.mahahsscboard.in");
+          goto("https://hsc_verificationstate.mahahsscboard.in");
           // goto("http://localhost:5173");
         })
         .catch((err) => {

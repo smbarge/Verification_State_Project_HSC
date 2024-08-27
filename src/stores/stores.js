@@ -191,7 +191,7 @@ export const logout = async () => {
   const instance = get(keycloak1);
   if (instance) {
     instance
-      .logout({ redirectUri: "https://hsc_verificationstaff.mahahsscboard.in" })
+      .logout({ redirectUri: "https://hsc_verificationstate.mahahsscboard.in" })
       .then(() => {
         // Clear any relevant stores or session data
         isLoggedIn.set(false);
@@ -201,7 +201,7 @@ export const logout = async () => {
         roles.set("");
         divisionMaster.set([]);
         // Redirect to login or home page
-        goto("https://hsc_verificationstaff.mahahsscboard.in");
+        goto("https://hsc_verificationstate.mahahsscboard.in");
       })
       .catch((error) => {
         console.error("Logout failed:", error);
