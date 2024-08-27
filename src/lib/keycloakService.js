@@ -20,7 +20,7 @@ export async function initKeycloak() {
     const keycloak = new Keycloak({
       url: "https://keycloak.mahahsscboard.in",
       realm: "board-users",
-      clientId: "hsc-recheck-operator-app",
+      clientId: "state-hsc-verification-app",
     });
 
     const authenticated = await keycloak.init({
