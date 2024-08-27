@@ -23,7 +23,7 @@
     console.log("response: ", response);
     let result = await response.json();
     let applications = result.applications;
-    console.log("applications are", applications);
+    console.log("result is ", result);
 
     // Example data
     disableDownload = true;

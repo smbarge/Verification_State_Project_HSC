@@ -22,9 +22,7 @@ export async function queryDb(query) {
     });
     await client.connect();
     console.log("db connection successful: ");
-    console.log("query:", query);
     const res = await client.query(query);
-    console.log("res.rows: ", JSON.stringify(res.rows, null, 2));
     return res.rows;
   } catch (error) {
     console.error("Query error", error.stack);

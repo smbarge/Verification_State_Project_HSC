@@ -6,7 +6,6 @@ export async function GET() {
     const data = await queryDb(
       "SELECT * FROM division_master order by division_code"
     );
-    console.log("data is", data);
     return new Response(
       JSON.stringify({
         status: 200,
