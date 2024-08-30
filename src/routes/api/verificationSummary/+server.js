@@ -7,8 +7,8 @@ export async function GET() {
       d.divn_code,
       t.recheck_type,
       COUNT(DISTINCT ra.recheck_application_id) AS total_applications,
-      COUNT(DISTINCT CASE WHEN rad.status = 'Complete' THEN ra.recheck_application_id END) AS complete_applications,
-      COUNT(DISTINCT CASE WHEN rad.status != 'Complete' OR rad.status IS NULL THEN ra.recheck_application_id END) AS incomplete_applications
+      COUNT(DISTINCT CASE WHEN ra.status = 'Complete' THEN ra.recheck_application_id END) AS complete_applications,
+      COUNT(DISTINCT CASE WHEN ra.status != 'Complete' OR ra.status IS NULL THEN ra.recheck_application_id END) AS incomplete_applications
     FROM
     (SELECT DISTINCT divn_code FROM recheck_application) d
     CROSS JOIN

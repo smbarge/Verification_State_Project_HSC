@@ -177,130 +177,275 @@
     }
   });
   $: puneDivisionVerificationCount = verificationDivisionCounts.find(
-    (e) => e.divn_code == 1
-  );
-  $: puneDivisionPhotocopyCount = photocopyDivisionCounts.find(
-    (e) => e.divn_code == 1
-  );
-  $: puneDivisionReEvaluationCount = reEvaluationDivisionCounts.find(
-    (e) => e.divn_code == 1
-  );
+  (e) => e.divn_code == 1
+)
+  ? verificationDivisionCounts.find((e) => e.divn_code == 1)
+  : {
+      total_applications: 0,
+      complete_applications: 0,
+      incomplete_applications: 0,
+    };
 
-  $: nagpurDivisionVerificationCount = verificationDivisionCounts.find(
-    (e) => e.divn_code == 2
-  );
-  $: nagpurDivisionPhotocopyCount = photocopyDivisionCounts.find(
-    (e) => e.divn_code == 2
-  );
-  $: nagpurDivisionReEvaluationCount = reEvaluationDivisionCounts.find(
-    (e) => e.divn_code == 2
-  );
-  $: chsambhajinagarDivisionVerificationCount = verificationDivisionCounts.find(
-    (e) => e.divn_code == 3
-  );
-  $: chsambhajinagarDivisionPhotocopyCount = photocopyDivisionCounts.find(
-    (e) => e.divn_code == 3
-  );
-  $: chsambhajinagarDivisionReEvaluationCount = reEvaluationDivisionCounts.find(
-    (e) => e.divn_code == 3
-  );
+$: puneDivisionPhotocopyCount = photocopyDivisionCounts.find(
+  (e) => e.divn_code == 1
+)
+  ? photocopyDivisionCounts.find((e) => e.divn_code == 1)
+  : {
+      total_applications: 0,
+      complete_applications: 0,
+      incomplete_applications: 0,
+    };
 
-  $: mumbaiDivisionVerificationCount = verificationDivisionCounts.find(
-    (e) => e.divn_code == 4
-  );
-  $: mumbaiDivisionPhotocopyCount = photocopyDivisionCounts.find(
-    (e) => e.divn_code == 4
-  );
-  $: mumbaiDivisionReEvaluationCount = reEvaluationDivisionCounts.find(
-    (e) => e.divn_code == 4
-  );
+$: puneDivisionReEvaluationCount = reEvaluationDivisionCounts.find(
+  (e) => e.divn_code == 1
+)
+  ? reEvaluationDivisionCounts.find((e) => e.divn_code == 1)
+  : {
+      total_applications: 0,
+      complete_applications: 0,
+      incomplete_applications: 0,
+    };
 
-  $: kolhapurDivisionVerificationCount = verificationDivisionCounts.find(
-    (e) => e.divn_code == 5
-  );
-  $: kolhapurDivisionPhotocopyCount = photocopyDivisionCounts.find(
-    (e) => e.divn_code == 5
-  );
-  $: kolhapurDivisionReEvaluationCount = reEvaluationDivisionCounts.find(
-    (e) => e.divn_code == 5
-  );
-  $: amravatiDivisionVerificationCount = verificationDivisionCounts.find(
-    (e) => e.divn_code == 6
-  );
-  $: amravatiDivisionPhotocopyCount = photocopyDivisionCounts.find(
-    (e) => e.divn_code == 6
-  );
-  $: amravatiDivisionReEvaluationCount = reEvaluationDivisionCounts.find(
-    (e) => e.divn_code == 6
-  );
-  $: nashikDivisionVerificationCount = verificationDivisionCounts.find(
-    (e) => e.divn_code == 7
-  );
-  $: nashikDivisionPhotocopyCount = photocopyDivisionCounts.find(
-    (e) => e.divn_code == 7
-  );
-  $: nashikDivisionReEvaluationCount = reEvaluationDivisionCounts.find(
-    (e) => e.divn_code == 7
-  );
-  $: laturDivisionVerificationCount = verificationDivisionCounts.find(
-    (e) => e.divn_code == 8
-  )
-    ? verificationDivisionCounts.find((e) => e.divn_code == 8)
-    : {
-        total_applications: 0,
-        complete_applications: 0,
-        incomplete_applications: 0,
-      };
+$: nagpurDivisionVerificationCount = verificationDivisionCounts.find(
+  (e) => e.divn_code == 2
+)
+  ? verificationDivisionCounts.find((e) => e.divn_code == 2)
+  : {
+      total_applications: 0,
+      complete_applications: 0,
+      incomplete_applications: 0,
+    };
 
-  $: laturDivisionPhotocopyCount = photocopyDivisionCounts.find(
-    (e) => e.divn_code == 8
-  )
-    ? photocopyDivisionCounts.find((e) => e.divn_code == 8)
-    : {
-        total_applications: 0,
-        complete_applications: 0,
-        incomplete_applications: 0,
-      };
+$: nagpurDivisionPhotocopyCount = photocopyDivisionCounts.find(
+  (e) => e.divn_code == 2
+)
+  ? photocopyDivisionCounts.find((e) => e.divn_code == 2)
+  : {
+      total_applications: 0,
+      complete_applications: 0,
+      incomplete_applications: 0,
+    };
 
-  $: laturDivisionReEvaluationCount = reEvaluationDivisionCounts.find(
-    (e) => e.divn_code == 8
-  )
-    ? reEvaluationDivisionCounts.find((e) => e.divn_code == 8)
-    : {
-        total_applications: 0,
-        complete_applications: 0,
-        incomplete_applications: 0,
-      };
+$: nagpurDivisionReEvaluationCount = reEvaluationDivisionCounts.find(
+  (e) => e.divn_code == 2
+)
+  ? reEvaluationDivisionCounts.find((e) => e.divn_code == 2)
+  : {
+      total_applications: 0,
+      complete_applications: 0,
+      incomplete_applications: 0,
+    };
 
-  $: konkanDivisionVerificationCount = verificationDivisionCounts.find(
-    (e) => e.divn_code == 9
-  )
-    ? verificationDivisionCounts.find((e) => e.divn_code == 9)
-    : {
-        total_applications: 0,
-        complete_applications: 0,
-        incomplete_applications: 0,
-      };
+$: chsambhajinagarDivisionVerificationCount = verificationDivisionCounts.find(
+  (e) => e.divn_code == 3
+)
+  ? verificationDivisionCounts.find((e) => e.divn_code == 3)
+  : {
+      total_applications: 0,
+      complete_applications: 0,
+      incomplete_applications: 0,
+    };
 
-  $: konkanDivisionPhotocopyCount = photocopyDivisionCounts.find(
-    (e) => e.divn_code == 9
-  )
-    ? photocopyDivisionCounts.find((e) => e.divn_code == 9)
-    : {
-        total_applications: 0,
-        complete_applications: 0,
-        incomplete_applications: 0,
-      };
+$: chsambhajinagarDivisionPhotocopyCount = photocopyDivisionCounts.find(
+  (e) => e.divn_code == 3
+)
+  ? photocopyDivisionCounts.find((e) => e.divn_code == 3)
+  : {
+      total_applications: 0,
+      complete_applications: 0,
+      incomplete_applications: 0,
+    };
 
-  $: konkanDivisionReEvaluationCount = reEvaluationDivisionCounts.find(
-    (e) => e.divn_code == 9
-  )
-    ? reEvaluationDivisionCounts.find((e) => e.divn_code == 9)
-    : {
-        total_applications: 0,
-        complete_applications: 0,
-        incomplete_applications: 0,
-      };
+$: chsambhajinagarDivisionReEvaluationCount = reEvaluationDivisionCounts.find(
+  (e) => e.divn_code == 3
+)
+  ? reEvaluationDivisionCounts.find((e) => e.divn_code == 3)
+  : {
+      total_applications: 0,
+      complete_applications: 0,
+      incomplete_applications: 0,
+    };
+
+$: mumbaiDivisionVerificationCount = verificationDivisionCounts.find(
+  (e) => e.divn_code == 4
+)
+  ? verificationDivisionCounts.find((e) => e.divn_code == 4)
+  : {
+      total_applications: 0,
+      complete_applications: 0,
+      incomplete_applications: 0,
+    };
+
+$: mumbaiDivisionPhotocopyCount = photocopyDivisionCounts.find(
+  (e) => e.divn_code == 4
+)
+  ? photocopyDivisionCounts.find((e) => e.divn_code == 4)
+  : {
+      total_applications: 0,
+      complete_applications: 0,
+      incomplete_applications: 0,
+    };
+
+$: mumbaiDivisionReEvaluationCount = reEvaluationDivisionCounts.find(
+  (e) => e.divn_code == 4
+)
+  ? reEvaluationDivisionCounts.find((e) => e.divn_code == 4)
+  : {
+      total_applications: 0,
+      complete_applications: 0,
+      incomplete_applications: 0,
+    };
+
+$: kolhapurDivisionVerificationCount = verificationDivisionCounts.find(
+  (e) => e.divn_code == 5
+)
+  ? verificationDivisionCounts.find((e) => e.divn_code == 5)
+  : {
+      total_applications: 0,
+      complete_applications: 0,
+      incomplete_applications: 0,
+    };
+
+$: kolhapurDivisionPhotocopyCount = photocopyDivisionCounts.find(
+  (e) => e.divn_code == 5
+)
+  ? photocopyDivisionCounts.find((e) => e.divn_code == 5)
+  : {
+      total_applications: 0,
+      complete_applications: 0,
+      incomplete_applications: 0,
+    };
+
+$: kolhapurDivisionReEvaluationCount = reEvaluationDivisionCounts.find(
+  (e) => e.divn_code == 5
+)
+  ? reEvaluationDivisionCounts.find((e) => e.divn_code == 5)
+  : {
+      total_applications: 0,
+      complete_applications: 0,
+      incomplete_applications: 0,
+    };
+
+$: amravatiDivisionVerificationCount = verificationDivisionCounts.find(
+  (e) => e.divn_code == 6
+)
+  ? verificationDivisionCounts.find((e) => e.divn_code == 6)
+  : {
+      total_applications: 0,
+      complete_applications: 0,
+      incomplete_applications: 0,
+    };
+
+$: amravatiDivisionPhotocopyCount = photocopyDivisionCounts.find(
+  (e) => e.divn_code == 6
+)
+  ? photocopyDivisionCounts.find((e) => e.divn_code == 6)
+  : {
+      total_applications: 0,
+      complete_applications: 0,
+      incomplete_applications: 0,
+    };
+
+$: amravatiDivisionReEvaluationCount = reEvaluationDivisionCounts.find(
+  (e) => e.divn_code == 6
+)
+  ? reEvaluationDivisionCounts.find((e) => e.divn_code == 6)
+  : {
+      total_applications: 0,
+      complete_applications: 0,
+      incomplete_applications: 0,
+    };
+
+$: nashikDivisionVerificationCount = verificationDivisionCounts.find(
+  (e) => e.divn_code == 7
+)
+  ? verificationDivisionCounts.find((e) => e.divn_code == 7)
+  : {
+      total_applications: 0,
+      complete_applications: 0,
+      incomplete_applications: 0,
+    };
+
+$: nashikDivisionPhotocopyCount = photocopyDivisionCounts.find(
+  (e) => e.divn_code == 7
+)
+  ? photocopyDivisionCounts.find((e) => e.divn_code == 7)
+  : {
+      total_applications: 0,
+      complete_applications: 0,
+      incomplete_applications: 0,
+    };
+
+$: nashikDivisionReEvaluationCount = reEvaluationDivisionCounts.find(
+  (e) => e.divn_code == 7
+)
+  ? reEvaluationDivisionCounts.find((e) => e.divn_code == 7)
+  : {
+      total_applications: 0,
+      complete_applications: 0,
+      incomplete_applications: 0,
+    };
+
+$: laturDivisionVerificationCount = verificationDivisionCounts.find(
+  (e) => e.divn_code == 8
+)
+  ? verificationDivisionCounts.find((e) => e.divn_code == 8)
+  : {
+      total_applications: 0,
+      complete_applications: 0,
+      incomplete_applications: 0,
+    };
+
+$: laturDivisionPhotocopyCount = photocopyDivisionCounts.find(
+  (e) => e.divn_code == 8
+)
+  ? photocopyDivisionCounts.find((e) => e.divn_code == 8)
+  : {
+      total_applications: 0,
+      complete_applications: 0,
+      incomplete_applications: 0,
+    };
+
+$: laturDivisionReEvaluationCount = reEvaluationDivisionCounts.find(
+  (e) => e.divn_code == 8
+)
+  ? reEvaluationDivisionCounts.find((e) => e.divn_code == 8)
+  : {
+      total_applications: 0,
+      complete_applications: 0,
+      incomplete_applications: 0,
+    };
+
+$: konkanDivisionVerificationCount = verificationDivisionCounts.find(
+  (e) => e.divn_code == 9
+)
+  ? verificationDivisionCounts.find((e) => e.divn_code == 9)
+  : {
+      total_applications: 0,
+      complete_applications: 0,
+      incomplete_applications: 0,
+    };
+
+$: konkanDivisionPhotocopyCount = photocopyDivisionCounts.find(
+  (e) => e.divn_code == 9
+)
+  ? photocopyDivisionCounts.find((e) => e.divn_code == 9)
+  : {
+      total_applications: 0,
+      complete_applications: 0,
+      incomplete_applications: 0,
+    };
+
+$: konkanDivisionReEvaluationCount = reEvaluationDivisionCounts.find(
+  (e) => e.divn_code == 9
+)
+  ? reEvaluationDivisionCounts.find((e) => e.divn_code == 9)
+  : {
+      total_applications: 0,
+      complete_applications: 0,
+      incomplete_applications: 0,
+    };
+
 </script>
 
 <div class="max-w-md mx-auto p-4">
