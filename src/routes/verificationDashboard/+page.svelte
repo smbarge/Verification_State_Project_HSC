@@ -7,7 +7,12 @@
   let applicationType = "";
   let divisions = [{ division_code: 0, division_name: "All" }];
   let disableDownload = false;
+  let disableDownload1 = false;
+
   let alertMsg = "";
+  let alertMsg1 = "";
+
+  let selected_division = -1;
   const downloadCSV = async () => {
     alertMsg = "";
     if (selected_division_code == -1) {
@@ -64,6 +69,58 @@
     document.body.removeChild(link);
     disableDownload = false;
   };
+  const downloadPayment = async () => {
+    alertMsg1 = "";
+    if (selected_division == -1) {
+      alertMsg1 = "Please select division";
+      return;
+    }
+    const response = await fetch(`/api/downloadPayment/${selected_division}`, {
+      method: "GET", // or simply omit this line, as GET is the default method
+      headers: {
+        "Content-Type": "application/json",
+        // Add other headers if needed, like authorization
+        // 'Authorization': 'Bearer your-token-here'
+      },
+    });
+    console.log("response: ", response);
+    let result = await response.json();
+    let applications = result.applications;
+    console.log("result is ", applications);
+
+    // Example data
+    disableDownload1 = true;
+    downloadpay(applications);
+
+    disableDownload1 = false;
+  };
+  function convertToCSV(data) {
+    let divisionName = divisions.find(
+      (e) => e.division_code == selected_division,
+    )?.division_name;
+
+    // const headers = Object.keys(data[0]).join(",");
+    const titleRow = `Account head wise fee collection report,,,,`;
+    let name = `${divisionName},,,,`;
+    let headers = ["Date", "301", "302", "303", "Total"];
+    let rows = data.map((row) => Object.values(row).join(",")).join("\n");
+    console.log("rows is", rows);
+    return `${titleRow}\n${name}\n${headers}\n${rows}`;
+  }
+  function downloadpay(data, filename = "payment.csv") {
+    const csv = convertToCSV(data);
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
   let verificationStateCount = {
     total_applications: 0,
     complete_applications: 0,
@@ -133,7 +190,7 @@
           total_applications: 0,
           complete_applications: 0,
           incomplete_applications: 0,
-        }
+        },
       );
       console.log("verificationStateCount: ", verificationStateCount);
 
@@ -152,7 +209,7 @@
           total_applications: 0,
           complete_applications: 0,
           incomplete_applications: 0,
-        }
+        },
       );
       console.log("photocopyStateCount: ", photocopyStateCount);
       //--
@@ -171,330 +228,361 @@
           total_applications: 0,
           complete_applications: 0,
           incomplete_applications: 0,
-        }
+        },
       );
       console.log("reEvaluationStateCount: ", reEvaluationStateCount);
     }
   });
   $: puneDivisionVerificationCount = verificationDivisionCounts.find(
-  (e) => e.divn_code == 1
-)
-  ? verificationDivisionCounts.find((e) => e.divn_code == 1)
-  : {
-      total_applications: 0,
-      complete_applications: 0,
-      incomplete_applications: 0,
-    };
+    (e) => e.divn_code == 1,
+  )
+    ? verificationDivisionCounts.find((e) => e.divn_code == 1)
+    : {
+        total_applications: 0,
+        complete_applications: 0,
+        incomplete_applications: 0,
+      };
 
-$: puneDivisionPhotocopyCount = photocopyDivisionCounts.find(
-  (e) => e.divn_code == 1
-)
-  ? photocopyDivisionCounts.find((e) => e.divn_code == 1)
-  : {
-      total_applications: 0,
-      complete_applications: 0,
-      incomplete_applications: 0,
-    };
+  $: puneDivisionPhotocopyCount = photocopyDivisionCounts.find(
+    (e) => e.divn_code == 1,
+  )
+    ? photocopyDivisionCounts.find((e) => e.divn_code == 1)
+    : {
+        total_applications: 0,
+        complete_applications: 0,
+        incomplete_applications: 0,
+      };
 
-$: puneDivisionReEvaluationCount = reEvaluationDivisionCounts.find(
-  (e) => e.divn_code == 1
-)
-  ? reEvaluationDivisionCounts.find((e) => e.divn_code == 1)
-  : {
-      total_applications: 0,
-      complete_applications: 0,
-      incomplete_applications: 0,
-    };
+  $: puneDivisionReEvaluationCount = reEvaluationDivisionCounts.find(
+    (e) => e.divn_code == 1,
+  )
+    ? reEvaluationDivisionCounts.find((e) => e.divn_code == 1)
+    : {
+        total_applications: 0,
+        complete_applications: 0,
+        incomplete_applications: 0,
+      };
 
-$: nagpurDivisionVerificationCount = verificationDivisionCounts.find(
-  (e) => e.divn_code == 2
-)
-  ? verificationDivisionCounts.find((e) => e.divn_code == 2)
-  : {
-      total_applications: 0,
-      complete_applications: 0,
-      incomplete_applications: 0,
-    };
+  $: nagpurDivisionVerificationCount = verificationDivisionCounts.find(
+    (e) => e.divn_code == 2,
+  )
+    ? verificationDivisionCounts.find((e) => e.divn_code == 2)
+    : {
+        total_applications: 0,
+        complete_applications: 0,
+        incomplete_applications: 0,
+      };
 
-$: nagpurDivisionPhotocopyCount = photocopyDivisionCounts.find(
-  (e) => e.divn_code == 2
-)
-  ? photocopyDivisionCounts.find((e) => e.divn_code == 2)
-  : {
-      total_applications: 0,
-      complete_applications: 0,
-      incomplete_applications: 0,
-    };
+  $: nagpurDivisionPhotocopyCount = photocopyDivisionCounts.find(
+    (e) => e.divn_code == 2,
+  )
+    ? photocopyDivisionCounts.find((e) => e.divn_code == 2)
+    : {
+        total_applications: 0,
+        complete_applications: 0,
+        incomplete_applications: 0,
+      };
 
-$: nagpurDivisionReEvaluationCount = reEvaluationDivisionCounts.find(
-  (e) => e.divn_code == 2
-)
-  ? reEvaluationDivisionCounts.find((e) => e.divn_code == 2)
-  : {
-      total_applications: 0,
-      complete_applications: 0,
-      incomplete_applications: 0,
-    };
+  $: nagpurDivisionReEvaluationCount = reEvaluationDivisionCounts.find(
+    (e) => e.divn_code == 2,
+  )
+    ? reEvaluationDivisionCounts.find((e) => e.divn_code == 2)
+    : {
+        total_applications: 0,
+        complete_applications: 0,
+        incomplete_applications: 0,
+      };
 
-$: chsambhajinagarDivisionVerificationCount = verificationDivisionCounts.find(
-  (e) => e.divn_code == 3
-)
-  ? verificationDivisionCounts.find((e) => e.divn_code == 3)
-  : {
-      total_applications: 0,
-      complete_applications: 0,
-      incomplete_applications: 0,
-    };
+  $: chsambhajinagarDivisionVerificationCount = verificationDivisionCounts.find(
+    (e) => e.divn_code == 3,
+  )
+    ? verificationDivisionCounts.find((e) => e.divn_code == 3)
+    : {
+        total_applications: 0,
+        complete_applications: 0,
+        incomplete_applications: 0,
+      };
 
-$: chsambhajinagarDivisionPhotocopyCount = photocopyDivisionCounts.find(
-  (e) => e.divn_code == 3
-)
-  ? photocopyDivisionCounts.find((e) => e.divn_code == 3)
-  : {
-      total_applications: 0,
-      complete_applications: 0,
-      incomplete_applications: 0,
-    };
+  $: chsambhajinagarDivisionPhotocopyCount = photocopyDivisionCounts.find(
+    (e) => e.divn_code == 3,
+  )
+    ? photocopyDivisionCounts.find((e) => e.divn_code == 3)
+    : {
+        total_applications: 0,
+        complete_applications: 0,
+        incomplete_applications: 0,
+      };
 
-$: chsambhajinagarDivisionReEvaluationCount = reEvaluationDivisionCounts.find(
-  (e) => e.divn_code == 3
-)
-  ? reEvaluationDivisionCounts.find((e) => e.divn_code == 3)
-  : {
-      total_applications: 0,
-      complete_applications: 0,
-      incomplete_applications: 0,
-    };
+  $: chsambhajinagarDivisionReEvaluationCount = reEvaluationDivisionCounts.find(
+    (e) => e.divn_code == 3,
+  )
+    ? reEvaluationDivisionCounts.find((e) => e.divn_code == 3)
+    : {
+        total_applications: 0,
+        complete_applications: 0,
+        incomplete_applications: 0,
+      };
 
-$: mumbaiDivisionVerificationCount = verificationDivisionCounts.find(
-  (e) => e.divn_code == 4
-)
-  ? verificationDivisionCounts.find((e) => e.divn_code == 4)
-  : {
-      total_applications: 0,
-      complete_applications: 0,
-      incomplete_applications: 0,
-    };
+  $: mumbaiDivisionVerificationCount = verificationDivisionCounts.find(
+    (e) => e.divn_code == 4,
+  )
+    ? verificationDivisionCounts.find((e) => e.divn_code == 4)
+    : {
+        total_applications: 0,
+        complete_applications: 0,
+        incomplete_applications: 0,
+      };
 
-$: mumbaiDivisionPhotocopyCount = photocopyDivisionCounts.find(
-  (e) => e.divn_code == 4
-)
-  ? photocopyDivisionCounts.find((e) => e.divn_code == 4)
-  : {
-      total_applications: 0,
-      complete_applications: 0,
-      incomplete_applications: 0,
-    };
+  $: mumbaiDivisionPhotocopyCount = photocopyDivisionCounts.find(
+    (e) => e.divn_code == 4,
+  )
+    ? photocopyDivisionCounts.find((e) => e.divn_code == 4)
+    : {
+        total_applications: 0,
+        complete_applications: 0,
+        incomplete_applications: 0,
+      };
 
-$: mumbaiDivisionReEvaluationCount = reEvaluationDivisionCounts.find(
-  (e) => e.divn_code == 4
-)
-  ? reEvaluationDivisionCounts.find((e) => e.divn_code == 4)
-  : {
-      total_applications: 0,
-      complete_applications: 0,
-      incomplete_applications: 0,
-    };
+  $: mumbaiDivisionReEvaluationCount = reEvaluationDivisionCounts.find(
+    (e) => e.divn_code == 4,
+  )
+    ? reEvaluationDivisionCounts.find((e) => e.divn_code == 4)
+    : {
+        total_applications: 0,
+        complete_applications: 0,
+        incomplete_applications: 0,
+      };
 
-$: kolhapurDivisionVerificationCount = verificationDivisionCounts.find(
-  (e) => e.divn_code == 5
-)
-  ? verificationDivisionCounts.find((e) => e.divn_code == 5)
-  : {
-      total_applications: 0,
-      complete_applications: 0,
-      incomplete_applications: 0,
-    };
+  $: kolhapurDivisionVerificationCount = verificationDivisionCounts.find(
+    (e) => e.divn_code == 5,
+  )
+    ? verificationDivisionCounts.find((e) => e.divn_code == 5)
+    : {
+        total_applications: 0,
+        complete_applications: 0,
+        incomplete_applications: 0,
+      };
 
-$: kolhapurDivisionPhotocopyCount = photocopyDivisionCounts.find(
-  (e) => e.divn_code == 5
-)
-  ? photocopyDivisionCounts.find((e) => e.divn_code == 5)
-  : {
-      total_applications: 0,
-      complete_applications: 0,
-      incomplete_applications: 0,
-    };
+  $: kolhapurDivisionPhotocopyCount = photocopyDivisionCounts.find(
+    (e) => e.divn_code == 5,
+  )
+    ? photocopyDivisionCounts.find((e) => e.divn_code == 5)
+    : {
+        total_applications: 0,
+        complete_applications: 0,
+        incomplete_applications: 0,
+      };
 
-$: kolhapurDivisionReEvaluationCount = reEvaluationDivisionCounts.find(
-  (e) => e.divn_code == 5
-)
-  ? reEvaluationDivisionCounts.find((e) => e.divn_code == 5)
-  : {
-      total_applications: 0,
-      complete_applications: 0,
-      incomplete_applications: 0,
-    };
+  $: kolhapurDivisionReEvaluationCount = reEvaluationDivisionCounts.find(
+    (e) => e.divn_code == 5,
+  )
+    ? reEvaluationDivisionCounts.find((e) => e.divn_code == 5)
+    : {
+        total_applications: 0,
+        complete_applications: 0,
+        incomplete_applications: 0,
+      };
 
-$: amravatiDivisionVerificationCount = verificationDivisionCounts.find(
-  (e) => e.divn_code == 6
-)
-  ? verificationDivisionCounts.find((e) => e.divn_code == 6)
-  : {
-      total_applications: 0,
-      complete_applications: 0,
-      incomplete_applications: 0,
-    };
+  $: amravatiDivisionVerificationCount = verificationDivisionCounts.find(
+    (e) => e.divn_code == 6,
+  )
+    ? verificationDivisionCounts.find((e) => e.divn_code == 6)
+    : {
+        total_applications: 0,
+        complete_applications: 0,
+        incomplete_applications: 0,
+      };
 
-$: amravatiDivisionPhotocopyCount = photocopyDivisionCounts.find(
-  (e) => e.divn_code == 6
-)
-  ? photocopyDivisionCounts.find((e) => e.divn_code == 6)
-  : {
-      total_applications: 0,
-      complete_applications: 0,
-      incomplete_applications: 0,
-    };
+  $: amravatiDivisionPhotocopyCount = photocopyDivisionCounts.find(
+    (e) => e.divn_code == 6,
+  )
+    ? photocopyDivisionCounts.find((e) => e.divn_code == 6)
+    : {
+        total_applications: 0,
+        complete_applications: 0,
+        incomplete_applications: 0,
+      };
 
-$: amravatiDivisionReEvaluationCount = reEvaluationDivisionCounts.find(
-  (e) => e.divn_code == 6
-)
-  ? reEvaluationDivisionCounts.find((e) => e.divn_code == 6)
-  : {
-      total_applications: 0,
-      complete_applications: 0,
-      incomplete_applications: 0,
-    };
+  $: amravatiDivisionReEvaluationCount = reEvaluationDivisionCounts.find(
+    (e) => e.divn_code == 6,
+  )
+    ? reEvaluationDivisionCounts.find((e) => e.divn_code == 6)
+    : {
+        total_applications: 0,
+        complete_applications: 0,
+        incomplete_applications: 0,
+      };
 
-$: nashikDivisionVerificationCount = verificationDivisionCounts.find(
-  (e) => e.divn_code == 7
-)
-  ? verificationDivisionCounts.find((e) => e.divn_code == 7)
-  : {
-      total_applications: 0,
-      complete_applications: 0,
-      incomplete_applications: 0,
-    };
+  $: nashikDivisionVerificationCount = verificationDivisionCounts.find(
+    (e) => e.divn_code == 7,
+  )
+    ? verificationDivisionCounts.find((e) => e.divn_code == 7)
+    : {
+        total_applications: 0,
+        complete_applications: 0,
+        incomplete_applications: 0,
+      };
 
-$: nashikDivisionPhotocopyCount = photocopyDivisionCounts.find(
-  (e) => e.divn_code == 7
-)
-  ? photocopyDivisionCounts.find((e) => e.divn_code == 7)
-  : {
-      total_applications: 0,
-      complete_applications: 0,
-      incomplete_applications: 0,
-    };
+  $: nashikDivisionPhotocopyCount = photocopyDivisionCounts.find(
+    (e) => e.divn_code == 7,
+  )
+    ? photocopyDivisionCounts.find((e) => e.divn_code == 7)
+    : {
+        total_applications: 0,
+        complete_applications: 0,
+        incomplete_applications: 0,
+      };
 
-$: nashikDivisionReEvaluationCount = reEvaluationDivisionCounts.find(
-  (e) => e.divn_code == 7
-)
-  ? reEvaluationDivisionCounts.find((e) => e.divn_code == 7)
-  : {
-      total_applications: 0,
-      complete_applications: 0,
-      incomplete_applications: 0,
-    };
+  $: nashikDivisionReEvaluationCount = reEvaluationDivisionCounts.find(
+    (e) => e.divn_code == 7,
+  )
+    ? reEvaluationDivisionCounts.find((e) => e.divn_code == 7)
+    : {
+        total_applications: 0,
+        complete_applications: 0,
+        incomplete_applications: 0,
+      };
 
-$: laturDivisionVerificationCount = verificationDivisionCounts.find(
-  (e) => e.divn_code == 8
-)
-  ? verificationDivisionCounts.find((e) => e.divn_code == 8)
-  : {
-      total_applications: 0,
-      complete_applications: 0,
-      incomplete_applications: 0,
-    };
+  $: laturDivisionVerificationCount = verificationDivisionCounts.find(
+    (e) => e.divn_code == 8,
+  )
+    ? verificationDivisionCounts.find((e) => e.divn_code == 8)
+    : {
+        total_applications: 0,
+        complete_applications: 0,
+        incomplete_applications: 0,
+      };
 
-$: laturDivisionPhotocopyCount = photocopyDivisionCounts.find(
-  (e) => e.divn_code == 8
-)
-  ? photocopyDivisionCounts.find((e) => e.divn_code == 8)
-  : {
-      total_applications: 0,
-      complete_applications: 0,
-      incomplete_applications: 0,
-    };
+  $: laturDivisionPhotocopyCount = photocopyDivisionCounts.find(
+    (e) => e.divn_code == 8,
+  )
+    ? photocopyDivisionCounts.find((e) => e.divn_code == 8)
+    : {
+        total_applications: 0,
+        complete_applications: 0,
+        incomplete_applications: 0,
+      };
 
-$: laturDivisionReEvaluationCount = reEvaluationDivisionCounts.find(
-  (e) => e.divn_code == 8
-)
-  ? reEvaluationDivisionCounts.find((e) => e.divn_code == 8)
-  : {
-      total_applications: 0,
-      complete_applications: 0,
-      incomplete_applications: 0,
-    };
+  $: laturDivisionReEvaluationCount = reEvaluationDivisionCounts.find(
+    (e) => e.divn_code == 8,
+  )
+    ? reEvaluationDivisionCounts.find((e) => e.divn_code == 8)
+    : {
+        total_applications: 0,
+        complete_applications: 0,
+        incomplete_applications: 0,
+      };
 
-$: konkanDivisionVerificationCount = verificationDivisionCounts.find(
-  (e) => e.divn_code == 9
-)
-  ? verificationDivisionCounts.find((e) => e.divn_code == 9)
-  : {
-      total_applications: 0,
-      complete_applications: 0,
-      incomplete_applications: 0,
-    };
+  $: konkanDivisionVerificationCount = verificationDivisionCounts.find(
+    (e) => e.divn_code == 9,
+  )
+    ? verificationDivisionCounts.find((e) => e.divn_code == 9)
+    : {
+        total_applications: 0,
+        complete_applications: 0,
+        incomplete_applications: 0,
+      };
 
-$: konkanDivisionPhotocopyCount = photocopyDivisionCounts.find(
-  (e) => e.divn_code == 9
-)
-  ? photocopyDivisionCounts.find((e) => e.divn_code == 9)
-  : {
-      total_applications: 0,
-      complete_applications: 0,
-      incomplete_applications: 0,
-    };
+  $: konkanDivisionPhotocopyCount = photocopyDivisionCounts.find(
+    (e) => e.divn_code == 9,
+  )
+    ? photocopyDivisionCounts.find((e) => e.divn_code == 9)
+    : {
+        total_applications: 0,
+        complete_applications: 0,
+        incomplete_applications: 0,
+      };
 
-$: konkanDivisionReEvaluationCount = reEvaluationDivisionCounts.find(
-  (e) => e.divn_code == 9
-)
-  ? reEvaluationDivisionCounts.find((e) => e.divn_code == 9)
-  : {
-      total_applications: 0,
-      complete_applications: 0,
-      incomplete_applications: 0,
-    };
-
+  $: konkanDivisionReEvaluationCount = reEvaluationDivisionCounts.find(
+    (e) => e.divn_code == 9,
+  )
+    ? reEvaluationDivisionCounts.find((e) => e.divn_code == 9)
+    : {
+        total_applications: 0,
+        complete_applications: 0,
+        incomplete_applications: 0,
+      };
 </script>
 
-<div class="max-w-md mx-auto p-4">
+<div class="max-w-4xl mx-auto p-4">
   <h1 class="text-2xl font-bold mb-4">
     Verification Photocopy And Re-evaluation Data Download
   </h1>
 
-  <form class="space-y-4">
-    <!-- Division Selection -->
-    <div>
-      <label for="division" class="block text-sm font-medium text-gray-700"
-        >Division</label
-      >
-      <!-- <pre>
-        {JSON.stringify(divisions, null, 2)}
-      </pre> -->
-      <select
-        id="division"
-        bind:value={selected_division_code}
-        class="mt-1 block w-full h-8 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-      >
-        <option value="" disabled selected>Select a division</option>
-        <!-- <option value="division1">ALL</option>
-        <option value="division2">Nashik</option>
-        <option value="division3">Kolhapur</option> 
-	-->
-        {#each divisions as { division_code, division_name }}
-          <option value={division_code}>{division_name}</option>
-        {/each}
-      </select>
-    </div>
+  <div class="flex space-x-4">
+    <!-- First Form -->
+    <form class="space-y-4 flex-1">
+      <!-- Division Selection -->
+      <div>
+        <label for="division1" class="block text-sm font-medium text-gray-700"
+          >Division Details</label
+        >
+        <select
+          id="division1"
+          bind:value={selected_division_code}
+          class="mt-1 block w-full h-8 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+        >
+          <option value="" disabled selected>Select a division</option>
+          {#each divisions as { division_code, division_name }}
+            <option value={division_code}>{division_name}</option>
+          {/each}
+        </select>
+      </div>
 
-    <!-- Download Button -->
-    <div>
-      <button
-        on:click={downloadCSV}
-        type="button"
-        disabled={disableDownload}
-        class="w-full bg-blue-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-      >
-        Download
-      </button>
-      {#if alertMsg}
-        <div class=" mt-3 p-3 bg-red-200 rounded">
-          {alertMsg}
-        </div>
-      {/if}
-    </div>
-  </form>
+      <!-- Download Button -->
+      <div>
+        <button
+          on:click={downloadCSV}
+          type="button"
+          disabled={disableDownload}
+          class="w-full bg-blue-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          Download
+        </button>
+        {#if alertMsg}
+          <div class="mt-3 p-3 bg-red-200 rounded">
+            {alertMsg}
+          </div>
+        {/if}
+      </div>
+    </form>
+
+    <!-- Second Form -->
+    <form class="space-y-4 flex-1">
+      <!-- Division Selection -->
+      <div>
+        <label for="division2" class="block text-sm font-medium text-gray-700"
+          >Payment Details</label
+        >
+        <select
+          id="division2"
+          bind:value={selected_division}
+          class="mt-1 block w-full h-8 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+        >
+          <option value="" disabled selected>Select a division</option>
+          {#each divisions as { division_code, division_name }}
+            <option value={division_code}>{division_name}</option>
+          {/each}
+        </select>
+      </div>
+
+      <div>
+        <button
+          on:click={downloadPayment}
+          type="button"
+          disabled={disableDownload1}
+          class="w-full bg-blue-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          Download
+        </button>
+        {#if alertMsg1}
+          <div class="mt-3 p-3 bg-red-200 rounded">
+            {alertMsg1}
+          </div>
+        {/if}
+      </div>
+    </form>
+  </div>
 </div>
 
 <div class="p-4 bg-white shadow rounded-lg">
