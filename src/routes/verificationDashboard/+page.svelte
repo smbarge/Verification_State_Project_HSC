@@ -94,6 +94,46 @@
 
     disableDownload1 = false;
   };
+
+  const onlineSubjectData = async () => {
+    const response = await fetch(`/api/onlineSubjectCsv`, {
+      method: "GET", // or simply omit this line, as GET is the default method
+      headers: {
+        "Content-Type": "application/json",
+        // Add other headers if needed, like authorization
+        // 'Authorization': 'Bearer your-token-here'
+      },
+    });
+    console.log("response: ", response);
+    let result = await response.json();
+    let applications = result.onlineSubject;
+    console.log("result is ", applications);
+
+    let headers = [Object.keys(applications[0])];
+    let data = [headers];
+    applications.forEach((e) => {
+      data = [...data, Object.values(e)];
+    });
+
+    // Convert data to CSV format
+    let csvContent =
+      "data:text/csv;charset=utf-8," + data.map((e) => e.join(",")).join("\n");
+
+    // Create a download link
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "ITSubject.csv");
+    document.body.appendChild(link); // Required for FF
+
+    // Simulate click
+    link.click();
+
+    // Clean up
+    document.body.removeChild(link);
+    // Example data
+    // downloadpay(applications);
+  };
   function convertToCSV(data) {
     let divisionName = divisions.find(
       (e) => e.division_code == selected_division,
@@ -107,6 +147,7 @@
     console.log("rows is", rows);
     return `${titleRow}\n${name}\n${headers}\n${rows}`;
   }
+
   function downloadpay(data, filename = "payment.csv") {
     const csv = convertToCSV(data);
     const blob = new Blob([csv], { type: "text/csv" });
@@ -121,6 +162,7 @@
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   }
+
   let verificationStateCount = {
     total_applications: 0,
     complete_applications: 0,
@@ -569,6 +611,32 @@
       <div>
         <button
           on:click={downloadPayment}
+          type="button"
+          disabled={disableDownload1}
+          class="w-full bg-blue-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          Download
+        </button>
+        {#if alertMsg1}
+          <div class="mt-3 p-3 bg-red-200 rounded">
+            {alertMsg1}
+          </div>
+        {/if}
+      </div>
+    </form>
+
+    <form class="space-y-4 flex-1">
+      <!-- Division Selection -->
+      <div>
+        <label for="division2" class="block text-sm font-medium text-gray-700">
+
+          IT Subject Details</label
+        >
+      </div>
+
+      <div>
+        <button
+          on:click={onlineSubjectData}
           type="button"
           disabled={disableDownload1}
           class="w-full bg-blue-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
