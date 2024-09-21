@@ -46,21 +46,28 @@ export async function GET({ params }) {
     let applications = await queryDb(sql);
     const ra_ids = applications.map((e) => e.recheck_application_id);
     if (ra_ids.length) {
-      sql = `SELECT 
-        ra.recheck_application_id, 
-        ra.address_id, 
-        ad.street_address, 
-        ad.taluka, 
-        ad.district, 
-        ad.state, 
-        ad.pin, 
-        ad.address_type, 
-        ad.is_default 
-      FROM 
-        recheck_application_address ra, 
-        address ad
-      WHERE ra.address_id = ad.address_id
-      AND recheck_application_id IN (${ra_ids.join(",")})`;
+      sql = `
+      SELECT 
+    ra.recheck_application_id, 
+    ad.address_id, 
+    ad.street_address, 
+    ad.taluka, 
+    ad.district, 
+    ad.state, 
+    ad.pin, 
+    ad.address_type, 
+    ad.is_default
+FROM 
+    recheck_application ra
+LEFT JOIN 
+    address ad ON (
+        (ra.address_id IS NOT NULL AND ad.address_id = ra.address_id) OR
+        (ra.address_id IS NULL AND ad.user_id = ra.seat_no AND ad.is_default = true)
+    )
+WHERE 
+    ra.recheck_application_id IN (${ra_ids.join(",")});
+
+      `;
 
       const addresses = await queryDb(sql);
 
@@ -74,33 +81,12 @@ export async function GET({ params }) {
 
       applications = applications.map((e) => {
         // assign address
+        console.log('e is', e)
         let address = {};
-        if (e.address_id) {
-          const found = addresses.find((a) => a.address_id == e.address_id);
-          console.log("found: ", found);
-          if (found) {
-            address = { ...found };
-          } else {
-            const address_id = "";
-            const address_type = "";
-            const district = "";
-            const is_default = "";
-            const pin = "";
-            const state = "";
-            const street_address = "";
-            const taluka = "";
-
-            address = {
-              address_id,
-              address_type,
-              district,
-              is_default,
-              pin,
-              state,
-              street_address,
-              taluka,
-            };
-          }
+        const found = addresses.find((a) => a.recheck_application_id == e.recheck_application_id);
+        console.log("found: ", found);
+        if (found) {
+          address = { ...found };
         } else {
           const address_id = "";
           const address_type = "";
@@ -174,8 +160,8 @@ export async function GET({ params }) {
         ap.delivery_type == 1
           ? "by_email"
           : ap.delivery_type == 2
-          ? "by_hand"
-          : "by_post";
+            ? "by_hand"
+            : "by_post";
       return { ...ap, ...details, delivery_type_text };
     });
 
