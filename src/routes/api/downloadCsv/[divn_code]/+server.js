@@ -7,6 +7,7 @@ export async function GET({ params }) {
     let sql = "";
     if (divn_code == 0) {
       sql = `SELECT 
+        rc.recheck_case_id,
         ra.recheck_application_id, 
         ra.seat_no, ra.divn_code, 
         ra.recheck_type, 
@@ -19,12 +20,16 @@ export async function GET({ params }) {
         ra.sabpaisa_trans_id, 
         ra.client_trans_id
       FROM 
-        recheck_application ra, 
+        recheck_application ra,
+        recheck_case rc, 
         exam_results er
       WHERE 
-      er.seat_no = ra.seat_no `;
+      er.seat_no = ra.seat_no AND
+      ra.recheck_application_id = rc.recheck_application_id 
+      `;
     } else {
       sql = `SELECT 
+        rc.recheck_case_id,
         ra.recheck_application_id, 
         ra.seat_no, 
         ra.divn_code, 
@@ -38,9 +43,11 @@ export async function GET({ params }) {
         ra.client_trans_id
       FROM 
       recheck_application ra, 
+      recheck_case rc,
       exam_results er
       WHERE 
-        er.seat_no = ra.seat_no AND 
+        er.seat_no = ra.seat_no AND
+      ra.recheck_application_id = rc.recheck_application_id AND
         er.divn_code = '${divn_code}'`;
     }
     let applications = await queryDb(sql);
