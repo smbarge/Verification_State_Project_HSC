@@ -80,6 +80,11 @@
       .querySelector(`[data-key="${event.key}" i]`)
       ?.dispatchEvent(new MouseEvent("click", { cancelable: true }));
   }
+
+
+    function confetti(arg0: HTMLDivElement, arg1: { particleCount: number | undefined; force: number; stageWidth: number; stageHeight: number; colors: string[]; }): any {
+        throw new Error("Function not implemented.");
+    }
 </script>
 
 <svelte:window on:keydown={keydown} />
