@@ -4,7 +4,7 @@
 
 <!-- credit: https://github.com/codebushi/gatsby-starter-lander -->
 <div>
-  <header class="sticky top-0 bg-white shadow">
+  <!-- <header class="sticky top-0 bg-white shadow">
     <div
       class="container flex flex-col sm:flex-row justify-between items-center mx-auto py-4 px-8"
     >
@@ -16,7 +16,7 @@
       </div>
       <div class="hidden md:block"></div>
     </div>
-  </header>
+  </header> -->
 
   <main class="text-gray-900">
     <section class="pt-20 md:pt-40">
@@ -37,7 +37,7 @@
               }}>Sign in</button
             >
           </p>
-          <p class="mt-4 text-gray-600">All days are good</p>
+          <!-- <p class="mt-4 text-gray-600">All days are good</p> -->
         </div>
 
         <div class="lg:w-1/2">
@@ -601,7 +601,7 @@
     </section>
   </main>
 
-  <footer class="container mx-auto py-16 px-3 mt-48 mb-8 text-gray-800">
+  <!-- <footer class="container mx-auto py-16 px-3 mt-48 mb-8 text-gray-800">
     <div class="flex -mx-3">
       <div class="flex-1 px-3">
         <h2 class="text-lg font-semibold">About Us</h2>
@@ -629,5 +629,5 @@
         </ul>
       </div>
     </div>
-  </footer>
+  </footer> -->
 </div>
