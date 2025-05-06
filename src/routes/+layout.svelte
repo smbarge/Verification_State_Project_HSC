@@ -13,7 +13,7 @@
   <div class="font-bold col-span-2 flex sm:justify-end justify-center">
     <img src="/mahalogo.png" class="h-10 w-10" alt="board Logo" />
   </div>
-  <div class="col-span-8 text-gray-100 dark:text-gray-100">
+  <div class="ml-4 col-span-8 text-gray-600 dark:text-gray-100">
     MAHARASHTRA STATE BOARD OF SECONDARY & HIGHER SECONDARY EDUCATION,PUNE <strong
     >
       HSC Exam Recheck</strong
