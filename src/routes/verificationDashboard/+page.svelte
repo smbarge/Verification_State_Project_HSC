@@ -655,7 +655,7 @@
 
 <div class="p-4 bg-white shadow rounded-lg">
   <h3 class="text-lg font-semibold">Maharashtra State</h3>
-  <div class="grid gird-cols-1 md:grid-cols-3 space-x-4 mt-4">
+  <div class="grid gird-cols-1 md:grid-cols-3 gap-4 mt-4">
     <VerificationCard
       title={"Verification of Answer book"}
       TotalCount={verificationStateCount.total_applications}
@@ -679,7 +679,7 @@
 
 <div class="p-4 bg-white shadow rounded-lg">
   <h3 class="text-lg font-semibold">Pune Division</h3>
-  <div class="grid gird-cols-1 md:grid-cols-3 space-x-4 mt-4">
+  <div class="grid gird-cols-1 md:grid-cols-3 gap-4 mt-4">
     <VerificationCard
       title={"Verification of Answer book"}
       TotalCount={puneDivisionVerificationCount?.total_applications}
@@ -702,7 +702,7 @@
 </div>
 <div class="p-4 bg-white shadow rounded-lg">
   <h3 class="text-lg font-semibold">Nagpur Division</h3>
-  <div class="grid gird-cols-1 md:grid-cols-3 space-x-4 mt-4">
+  <div class="grid gird-cols-1 md:grid-cols-3 gap-4 mt-4">
     <VerificationCard
       title={"Verification of Answer book"}
       TotalCount={nagpurDivisionVerificationCount?.total_applications}
@@ -725,7 +725,7 @@
 </div>
 <div class="p-4 bg-white shadow rounded-lg">
   <h3 class="text-lg font-semibold">Chh.Sambhajinagar Division</h3>
-  <div class="grid gird-cols-1 md:grid-cols-3 space-x-4 mt-4">
+  <div class="grid gird-cols-1 md:grid-cols-3 gap-4 mt-4">
     <VerificationCard
       title={"Verification of Answer book"}
       TotalCount={chsambhajinagarDivisionVerificationCount?.total_applications}
@@ -748,7 +748,7 @@
 </div>
 <div class="p-4 bg-white shadow rounded-lg">
   <h3 class="text-lg font-semibold">Mumbai Division</h3>
-  <div class="grid gird-cols-1 md:grid-cols-3 space-x-4 mt-4">
+  <div class="grid gird-cols-1 md:grid-cols-3 gap-4 mt-4">
     <VerificationCard
       title={"Verification of Answer book"}
       TotalCount={mumbaiDivisionVerificationCount?.total_applications}
@@ -771,7 +771,7 @@
 </div>
 <div class="p-4 bg-white shadow rounded-lg">
   <h3 class="text-lg font-semibold">Kolhapur Division</h3>
-  <div class="grid gird-cols-1 md:grid-cols-3 space-x-4 mt-4">
+  <div class="grid gird-cols-1 md:grid-cols-3 gap-4 mt-4">
     <VerificationCard
       title={"Verification of Answer book"}
       TotalCount={kolhapurDivisionVerificationCount?.total_applications}
@@ -794,7 +794,7 @@
 </div>
 <div class="p-4 bg-white shadow rounded-lg">
   <h3 class="text-lg font-semibold">Amaravati Division</h3>
-  <div class="grid gird-cols-1 md:grid-cols-3 space-x-4 mt-4">
+  <div class="grid gird-cols-1 md:grid-cols-3 gap-4 mt-4">
     <VerificationCard
       title={"Verification of Answer book"}
       TotalCount={amravatiDivisionVerificationCount?.total_applications}
@@ -818,7 +818,7 @@
 
 <div class="p-4 bg-white shadow rounded-lg">
   <h3 class="text-lg font-semibold">Nashik Division</h3>
-  <div class="grid gird-cols-1 md:grid-cols-3 space-x-4 mt-4">
+  <div class="grid gird-cols-1 md:grid-cols-3 gap-4 mt-4">
     <VerificationCard
       title={"Verification of Answer book"}
       TotalCount={nashikDivisionVerificationCount?.total_applications}
@@ -841,7 +841,7 @@
 </div>
 <div class="p-4 bg-white shadow rounded-lg">
   <h3 class="text-lg font-semibold">Latur Division</h3>
-  <div class="grid gird-cols-1 md:grid-cols-3 space-x-4 mt-4">
+  <div class="grid gird-cols-1 md:grid-cols-3 gap-4 mt-4">
     <VerificationCard
       title={"Verification of Answer book"}
       TotalCount={laturDivisionVerificationCount?.total_applications}
@@ -864,7 +864,7 @@
 </div>
 <div class="p-4 bg-white shadow rounded-lg">
   <h3 class="text-lg font-semibold">Konkan Division</h3>
-  <div class="grid gird-cols-1 md:grid-cols-3 space-x-4 mt-4">
+  <div class="grid gird-cols-1 md:grid-cols-3 gap-4 mt-4">
     <VerificationCard
       title={"Verification of Answer book"}
       TotalCount={konkanDivisionVerificationCount?.total_applications}
