@@ -14,6 +14,7 @@
 
   let selected_division = -1;
   const downloadCSV = async () => {
+    console.log("downloadCSV function called");
     alertMsg = "";
     if (selected_division_code == -1) {
       alertMsg = "Please select division";
@@ -45,28 +46,50 @@
       disableDownload = false;
       return;
     }
-    let headers = [Object.keys(applications[0])];
-    data = [headers];
-    applications.forEach((e) => {
-      data = [...data, Object.values(e)];
-    });
+    let headers = Object.keys(applications[0]);
+let rows = applications.map(e => Object.values(e));
+ data = [headers, ...rows];
 
-    // Convert data to CSV format
-    let csvContent =
-      "data:text/csv;charset=utf-8," + data.map((e) => e.join(",")).join("\n");
+// Convert to CSV string
+let csvContent = data.map(e => e.join(",")).join("\n");
 
-    // Create a download link
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "recheck_applications.csv");
-    document.body.appendChild(link); // Required for FF
+// Use Blob instead of data URI
+let blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+let url = URL.createObjectURL(blob);
 
-    // Simulate click
-    link.click();
+// Create download link
+const link = document.createElement("a");
+link.setAttribute("href", url);
+link.setAttribute("download", "recheck_applications.csv");
+document.body.appendChild(link);
 
-    // Clean up
-    document.body.removeChild(link);
+// Trigger download
+link.click();
+
+// Cleanup
+document.body.removeChild(link);
+    // let headers = [Object.keys(applications[0])];
+    // data = [headers];
+    // applications.forEach((e) => {
+    //   data = [...data, Object.values(e)];
+    // });
+
+    // // Convert data to CSV format
+    // let csvContent =
+    //   "data:text/csv;charset=utf-8," + data.map((e) => e.join(",")).join("\n");
+
+    // // Create a download link
+    // const encodedUri = encodeURI(csvContent);
+    // const link = document.createElement("a");
+    // link.setAttribute("href", encodedUri);
+    // link.setAttribute("download", "recheck_applications.csv");
+    // document.body.appendChild(link); // Required for FF
+
+    // // Simulate click
+    // link.click();
+
+    // // Clean up
+    // document.body.removeChild(link);
     disableDownload = false;
   };
   const downloadPayment = async () => {
@@ -552,9 +575,7 @@
   </h1>
 
   <div class="flex space-x-4">
-    <!-- First Form -->
     <form class="space-y-4 flex-1">
-      <!-- Division Selection -->
       <div>
         <label for="division1" class="block text-sm font-medium text-gray-700"
           >Division Details</label
@@ -571,7 +592,6 @@
         </select>
       </div>
 
-      <!-- Download Button -->
       <div>
         <button
           on:click={downloadCSV}
@@ -589,9 +609,7 @@
       </div>
     </form>
 
-    <!-- Second Form -->
     <form class="space-y-4 flex-1">
-      <!-- Division Selection -->
       <div>
         <label for="division2" class="block text-sm font-medium text-gray-700"
           >Payment Details</label
@@ -626,7 +644,6 @@
     </form>
 
     <form class="space-y-4 flex-1">
-      <!-- Division Selection -->
       <div>
         <label for="division2" class="block text-sm font-medium text-gray-700">
 
