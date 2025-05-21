@@ -55,7 +55,7 @@ export async function GET({ params }) {
       LEFT JOIN paper_status ps2 ON ps2.recheck_case_id = rc.recheck_case_id AND ps2.final_status = 'ChangeLetterGenerated'
       LEFT JOIN lot_list ll ON ll.recheck_case_id = rc.recheck_case_id
       LEFT JOIN recheck_application_detail rad ON rad.recheck_application_id = ra.recheck_application_id
-      ${divn_code == '0' ? "" : `WHERE er.divn_code = '${divn_code}'`}
+      ${divn_code == 0 ? "" : `WHERE er.divn_code = '${divn_code}'`}
       ORDER BY ra.recheck_application_id;
     `;
 

@@ -1,6 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import VerificationCard from "$lib/components/VerificationCard.svelte";
+  import { A } from "flowbite-svelte";
 
   let selected_division_code = -1;
   let date = "";
@@ -11,7 +12,35 @@
 
   let alertMsg = "";
   let alertMsg1 = "";
-
+ let seatNo = "";
+  let caseSeatNo = "";
+let alerMsgcase='';
+  // Replace this with your actual search function
+  async function searchCase() {
+    if (caseSeatNo.trim() === "") {
+      alerMsgcase = "Please enter a valid Case Id.";
+      return;
+    }
+    let response = await fetch(`/api/recheckCaseId/${caseSeatNo}`, {
+      method: "GET", // or simply omit this line, as GET is the default method
+      headers: {
+        "Content-Type": "application/json",
+        // Add other headers if needed, like authorization
+        // 'Authorization': 'Bearer your-token-here'
+      },
+    });
+    let data = await response.json();
+  if (data.error!=0) {alerMsgcase = data.errorMsg;
+    seatNo='';
+    caseSeatNo='';
+  return;
+  }
+    seatNo = data.seatNo;
+    // Example logic
+    alerMsgcase = "";
+    // perform your search logic here
+    console.log("Searching for seat no:", caseSeatNo);
+  }
   let selected_division = -1;
   const downloadCSV = async () => {
     console.log("downloadCSV function called");
@@ -20,6 +49,8 @@
       alertMsg = "Please select division";
       return;
     }
+    console.log("division code is ",selected_division_code);
+    
     const response = await fetch(`/api/downloadCsv/${selected_division_code}`, {
       method: "GET", // or simply omit this line, as GET is the default method
       headers: {
@@ -642,10 +673,57 @@ document.body.removeChild(link);
         {/if}
       </div>
     </form>
+  <form class="space-y-4 flex-2">
+      <!-- Case Seat No Search -->
+      <div>
+        <label for="seatNo" class="block text-sm font-medium text-gray-700">
+          Search Recheck Case ID 
+        </label>
+        <div class="relative">
+          <input
+            id="seatNo"
+            type="text"
+            bind:value={caseSeatNo}
+            placeholder="Enter Recheck Case ID"
+            class="mt-1 block w-full h-8 pr-10 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+          />
+          <div
+            class="absolute inset-y-0 right-2 flex items-center cursor-pointer text-gray-500 hover:text-blue-600"
+            on:click={searchCase}
+          >
+            <!-- SVG Search Icon -->
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 103.75 3.75a7.5 7.5 0 0012.9 12.9z"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
 
+      {#if seatNo?.length>0}
+        <div class="mt-3 p-3 flex justify-center items-center bg-green-200 rounded">
+          {seatNo}
+        </div>
+      {/if}
+       {#if alerMsgcase}
+        <div class="mt-3 p-3 flex justify-center items-center bg-red-200 rounded">
+          {alerMsgcase}
+        </div>
+      {/if}
+    </form>
     <form class="space-y-4 flex-1">
       <div>
-        <label for="division2" class="block text-sm font-medium text-gray-700">
+        <label for="division2" class="block text-sm flex justify-center text-center mt-9 font-medium text-gray-700">
 
           IT Subject Details</label
         >
@@ -656,17 +734,18 @@ document.body.removeChild(link);
           on:click={onlineSubjectData}
           type="button"
           disabled={disableDownload1}
-          class="w-full bg-blue-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full bg-blue-500 text-white  py-2 px-4 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           Download
         </button>
-        {#if alertMsg1}
+        <!-- {#if alertMsg1}
           <div class="mt-3 p-3 bg-red-200 rounded">
             {alertMsg1}
           </div>
-        {/if}
+        {/if} -->
       </div>
     </form>
+  
   </div>
 </div>
 
