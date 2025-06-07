@@ -180,7 +180,7 @@
     }
 
     try {
-      const response = await fetch("http://localhost:8001/removeDispatch", {
+      const response = await fetch("/api/changeFinalStatus/removeFinalStatus", {
         method: "POST",
         headers: {
           "content-type": "application/json",
