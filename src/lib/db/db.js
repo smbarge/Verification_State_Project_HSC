@@ -16,7 +16,7 @@ async function connectDb() {
 export async function queryDb(query) {
   try {
     let DATABASE_URL =
-      "postgres://boarduser:admin@2025@13.201.175.254:5432/board_sharding";
+      "postgres://boarduser:admin@2025@3.110.205.109/hsc_board_verification_july25";
     const client = new Client({
       connectionString: DATABASE_URL,
     });
