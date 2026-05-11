@@ -12,9 +12,9 @@
 
   let alertMsg = "";
   let alertMsg1 = "";
- let seatNo = "";
+  let seatNo = "";
   let caseSeatNo = "";
-let alerMsgcase='';
+  let alerMsgcase = "";
   // Replace this with your actual search function
   async function searchCase() {
     if (caseSeatNo.trim() === "") {
@@ -30,11 +30,12 @@ let alerMsgcase='';
       },
     });
     let data = await response.json();
-  if (data.error!=0) {alerMsgcase = data.errorMsg;
-    seatNo='';
-    caseSeatNo='';
-  return;
-  }
+    if (data.error != 0) {
+      alerMsgcase = data.errorMsg;
+      seatNo = "";
+      caseSeatNo = "";
+      return;
+    }
     seatNo = data.seatNo;
     // Example logic
     alerMsgcase = "";
@@ -49,8 +50,8 @@ let alerMsgcase='';
       alertMsg = "Please select division";
       return;
     }
-    console.log("division code is ",selected_division_code);
-    
+    console.log("division code is ", selected_division_code);
+
     const response = await fetch(`/api/downloadCsv/${selected_division_code}`, {
       method: "GET", // or simply omit this line, as GET is the default method
       headers: {
@@ -78,27 +79,27 @@ let alerMsgcase='';
       return;
     }
     let headers = Object.keys(applications[0]);
-let rows = applications.map(e => Object.values(e));
- data = [headers, ...rows];
+    let rows = applications.map((e) => Object.values(e));
+    data = [headers, ...rows];
 
-// Convert to CSV string
-let csvContent = data.map(e => e.join(",")).join("\n");
+    // Convert to CSV string
+    let csvContent = data.map((e) => e.join(",")).join("\n");
 
-// Use Blob instead of data URI
-let blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-let url = URL.createObjectURL(blob);
+    // Use Blob instead of data URI
+    let blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    let url = URL.createObjectURL(blob);
 
-// Create download link
-const link = document.createElement("a");
-link.setAttribute("href", url);
-link.setAttribute("download", "recheck_applications.csv");
-document.body.appendChild(link);
+    // Create download link
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", "recheck_applications.csv");
+    document.body.appendChild(link);
 
-// Trigger download
-link.click();
+    // Trigger download
+    link.click();
 
-// Cleanup
-document.body.removeChild(link);
+    // Cleanup
+    document.body.removeChild(link);
     // let headers = [Object.keys(applications[0])];
     // data = [headers];
     // applications.forEach((e) => {
@@ -188,6 +189,34 @@ document.body.removeChild(link);
     // Example data
     // downloadpay(applications);
   };
+
+  async function csvDownload() {
+    try {
+        const response = await fetch('/api/report');
+
+        if (!response.ok) {
+            throw new Error('Download failed');
+        }
+
+        const blob = await response.blob();
+
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'hsc_report.xlsx';
+        document.body.appendChild(a);
+        a.click();
+
+        a.remove();
+        window.URL.revokeObjectURL(url);
+
+    } catch (error) {
+        console.error(error);
+        alert('Failed to download report');
+    }
+}
+
   function convertToCSV(data) {
     let divisionName = divisions.find(
       (e) => e.division_code == selected_division,
@@ -673,11 +702,11 @@ document.body.removeChild(link);
         {/if}
       </div>
     </form>
-  <form class="space-y-4 flex-2">
+    <form class="space-y-4 flex-2">
       <!-- Case Seat No Search -->
       <div>
         <label for="seatNo" class="block text-sm font-medium text-gray-700">
-          Search Recheck Case ID 
+          Search Recheck Case ID
         </label>
         <div class="relative">
           <input
@@ -710,21 +739,27 @@ document.body.removeChild(link);
         </div>
       </div>
 
-      {#if seatNo?.length>0}
-        <div class="mt-3 p-3 flex justify-center items-center bg-green-200 rounded">
+      {#if seatNo?.length > 0}
+        <div
+          class="mt-3 p-3 flex justify-center items-center bg-green-200 rounded"
+        >
           {seatNo}
         </div>
       {/if}
-       {#if alerMsgcase}
-        <div class="mt-3 p-3 flex justify-center items-center bg-red-200 rounded">
+      {#if alerMsgcase}
+        <div
+          class="mt-3 p-3 flex justify-center items-center bg-red-200 rounded"
+        >
           {alerMsgcase}
         </div>
       {/if}
     </form>
     <form class="space-y-4 flex-1">
       <div>
-        <label for="division2" class="block text-sm flex justify-center text-center mt-9 font-medium text-gray-700">
-
+        <label
+          for="division2"
+          class="block text-sm flex justify-center text-center mt-9 font-medium text-gray-700"
+        >
           IT Subject Details</label
         >
       </div>
@@ -734,7 +769,7 @@ document.body.removeChild(link);
           on:click={onlineSubjectData}
           type="button"
           disabled={disableDownload1}
-          class="w-full bg-blue-500 text-white  py-2 px-4 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full bg-blue-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           Download
         </button>
@@ -745,7 +780,31 @@ document.body.removeChild(link);
         {/if} -->
       </div>
     </form>
-  
+    <form class="space-y-4 flex-1">
+      <div>
+        <label
+          for="division2"
+          class="block text-sm flex justify-center text-center mt-9 font-medium text-gray-700"
+        >
+          Report
+        </label>
+      </div>
+
+      <div>
+        <button
+          on:click={csvDownload}
+          type="button"
+          class="w-full bg-blue-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          Download
+        </button>
+        <!-- {#if alertMsg1}
+          <div class="mt-3 p-3 bg-red-200 rounded">
+            {alertMsg1}
+          </div>
+        {/if} -->
+      </div>
+    </form>
   </div>
 </div>
 
