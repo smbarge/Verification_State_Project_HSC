@@ -5,9 +5,9 @@ export async function GET() {
   try {
     const query = `
     SELECT
-    ps.division_code,
-
-    -- Verification (type 1)
+     ps.division_code AS "Division Code",
+    dm.division_name AS "Division Name",
+      -- Verification (type 1)
     COUNT(*) FILTER (
         WHERE ra.recheck_type = 1
         AND rc.recheck_case_id LIKE '%H301%'
@@ -74,8 +74,9 @@ JOIN recheck_case rc
 
 JOIN recheck_application ra
     ON rc.recheck_application_id = ra.recheck_application_id
-
-GROUP BY ps.division_code
+JOIN division_master dm
+    ON dm.division_code = ps.division_code
+GROUP BY ps.division_code,dm.division_name
 ORDER BY ps.division_code;
     `;
 
