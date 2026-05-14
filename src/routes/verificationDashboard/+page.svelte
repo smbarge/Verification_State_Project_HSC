@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import VerificationCard from "$lib/components/VerificationCard.svelte";
   import { A } from "flowbite-svelte";
+  import { goto } from "$app/navigation";
 
   let selected_division_code = -1;
   let date = "";
@@ -42,6 +43,11 @@
     // perform your search logic here
     console.log("Searching for seat no:", caseSeatNo);
   }
+
+  const gotoSupport = () => {
+    goto("./support");
+  };
+
   let selected_division = -1;
   const downloadCSV = async () => {
     console.log("downloadCSV function called");
@@ -192,30 +198,29 @@
 
   async function csvDownload() {
     try {
-        const response = await fetch('/api/report');
+      const response = await fetch("/api/report");
 
-        if (!response.ok) {
-            throw new Error('Download failed');
-        }
+      if (!response.ok) {
+        throw new Error("Download failed");
+      }
 
-        const blob = await response.blob();
+      const blob = await response.blob();
 
-        const url = window.URL.createObjectURL(blob);
+      const url = window.URL.createObjectURL(blob);
 
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'hsc_report.xlsx';
-        document.body.appendChild(a);
-        a.click();
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "hsc_report.xlsx";
+      document.body.appendChild(a);
+      a.click();
 
-        a.remove();
-        window.URL.revokeObjectURL(url);
-
+      a.remove();
+      window.URL.revokeObjectURL(url);
     } catch (error) {
-        console.error(error);
-        alert('Failed to download report');
+      console.error(error);
+      alert("Failed to download report");
     }
-}
+  }
 
   function convertToCSV(data) {
     let divisionName = divisions.find(
@@ -629,23 +634,29 @@
       };
 </script>
 
-<div class="max-w-4xl mx-auto p-4">
-  <h1 class="text-2xl font-bold mb-4">
+<div class="max-w-7xl mx-auto p-4">
+  <h1 class="text-2xl font-bold mb-5 text-center">
     Verification Photocopy And Re-evaluation Data Download
   </h1>
 
-  <div class="flex space-x-4">
-    <form class="space-y-4 flex-1">
+  <div class="flex gap-4 items-start justify-center">
+    <!-- Division Details -->
+    <form class="space-y-3 w-[180px]">
       <div>
-        <label for="division1" class="block text-sm font-medium text-gray-700"
-          >Division Details</label
+        <label
+          for="division1"
+          class="block text-sm font-medium text-gray-700"
         >
+          Division Details
+        </label>
+
         <select
           id="division1"
           bind:value={selected_division_code}
-          class="mt-1 block w-full h-8 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+          class="mt-1 block w-full h-9 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-2"
         >
           <option value="" disabled selected>Select a division</option>
+
           {#each divisions as { division_code, division_name }}
             <option value={division_code}>{division_name}</option>
           {/each}
@@ -657,29 +668,36 @@
           on:click={downloadCSV}
           type="button"
           disabled={disableDownload}
-          class="w-full bg-blue-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full h-9 bg-blue-500 text-white text-sm rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           Download
         </button>
+
         {#if alertMsg}
-          <div class="mt-3 p-3 bg-red-200 rounded">
+          <div class="mt-2 p-2 bg-red-200 rounded text-sm">
             {alertMsg}
           </div>
         {/if}
       </div>
     </form>
 
-    <form class="space-y-4 flex-1">
+    <!-- Payment Details -->
+    <form class="space-y-3 w-[180px]">
       <div>
-        <label for="division2" class="block text-sm font-medium text-gray-700"
-          >Payment Details</label
+        <label
+          for="division2"
+          class="block text-sm font-medium text-gray-700"
         >
+          Payment Details
+        </label>
+
         <select
           id="division2"
           bind:value={selected_division}
-          class="mt-1 block w-full h-8 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+          class="mt-1 block w-full h-9 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-2"
         >
           <option value="" disabled selected>Select a division</option>
+
           {#each divisions as { division_code, division_name }}
             <option value={division_code}>{division_name}</option>
           {/each}
@@ -691,36 +709,42 @@
           on:click={downloadPayment}
           type="button"
           disabled={disableDownload1}
-          class="w-full bg-blue-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full h-9 bg-blue-500 text-white text-sm rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           Download
         </button>
+
         {#if alertMsg1}
-          <div class="mt-3 p-3 bg-red-200 rounded">
+          <div class="mt-2 p-2 bg-red-200 rounded text-sm">
             {alertMsg1}
           </div>
         {/if}
       </div>
     </form>
-    <form class="space-y-4 flex-2">
-      <!-- Case Seat No Search -->
+
+    <!-- Search -->
+    <form class="space-y-3 w-[240px]">
       <div>
-        <label for="seatNo" class="block text-sm font-medium text-gray-700">
+        <label
+          for="seatNo"
+          class="block text-sm font-medium text-gray-700"
+        >
           Search Recheck Case ID
         </label>
+
         <div class="relative">
           <input
             id="seatNo"
             type="text"
             bind:value={caseSeatNo}
             placeholder="Enter Recheck Case ID"
-            class="mt-1 block w-full h-8 pr-10 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+            class="mt-1 block w-full h-9 pl-3 pr-12 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
           />
+
           <div
-            class="absolute inset-y-0 right-2 flex items-center cursor-pointer text-gray-500 hover:text-blue-600"
+            class="absolute inset-y-0 right-3 flex items-center cursor-pointer text-gray-500 hover:text-blue-600"
             on:click={searchCase}
           >
-            <!-- SVG Search Icon -->
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-5 w-5"
@@ -741,68 +765,82 @@
 
       {#if seatNo?.length > 0}
         <div
-          class="mt-3 p-3 flex justify-center items-center bg-green-200 rounded"
+          class="mt-2 p-2 flex justify-center items-center bg-green-200 rounded text-sm"
         >
           {seatNo}
         </div>
       {/if}
+
       {#if alerMsgcase}
         <div
-          class="mt-3 p-3 flex justify-center items-center bg-red-200 rounded"
+          class="mt-2 p-2 flex justify-center items-center bg-red-200 rounded text-sm"
         >
           {alerMsgcase}
         </div>
       {/if}
     </form>
-    <form class="space-y-4 flex-1">
+
+    <!-- IT Subject Details -->
+    <form class="space-y-3 w-[150px]">
       <div>
         <label
-          for="division2"
-          class="block text-sm flex justify-center text-center mt-9 font-medium text-gray-700"
+          class="block text-sm text-center font-medium text-gray-700 mt-1"
         >
-          IT Subject Details</label
-        >
+          IT Subject Details
+        </label>
       </div>
 
-      <div>
+      <div class="pt-8">
         <button
           on:click={onlineSubjectData}
           type="button"
           disabled={disableDownload1}
-          class="w-full bg-blue-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full h-9 bg-blue-500 text-white text-sm rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           Download
         </button>
-        <!-- {#if alertMsg1}
-          <div class="mt-3 p-3 bg-red-200 rounded">
-            {alertMsg1}
-          </div>
-        {/if} -->
       </div>
     </form>
-    <form class="space-y-4 flex-1">
+
+    <!-- Report -->
+    <form class="space-y-3 w-[140px]">
       <div>
         <label
-          for="division2"
-          class="block text-sm flex justify-center text-center mt-9 font-medium text-gray-700"
+          class="block text-sm text-center font-medium text-gray-700 mt-1"
         >
           Report
         </label>
       </div>
 
-      <div>
+      <div class="pt-8">
         <button
           on:click={csvDownload}
           type="button"
-          class="w-full bg-blue-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full h-9 bg-blue-500 text-white text-sm rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           Download
         </button>
-        <!-- {#if alertMsg1}
-          <div class="mt-3 p-3 bg-red-200 rounded">
-            {alertMsg1}
-          </div>
-        {/if} -->
+      </div>
+    </form>
+
+    <!-- Support -->
+    <form class="space-y-3 w-[170px]">
+      <div>
+        <label
+          class="block text-sm text-center font-medium text-gray-700 mt-1"
+        >
+          Go to Support Page
+        </label>
+      </div>
+
+      <div class="pt-8">
+        <button
+          on:click={gotoSupport}
+          type="button"
+          class="w-full h-9 bg-blue-500 text-white text-sm rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          Recheck Support
+        </button>
       </div>
     </form>
   </div>

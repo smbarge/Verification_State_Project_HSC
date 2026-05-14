@@ -1,4 +1,5 @@
 <script>
+  import { goto } from "$app/navigation";
   import {
     Search,
     Loader2,
@@ -19,6 +20,9 @@
     type: "", // "confirm" | "success" | "error"
     message: "",
     onConfirm: null,
+  };
+  const gotoVerificationDashboard = () => {
+    goto("./verificationDashboard");
   };
 
   function showAlert(message, type = "error") {
@@ -189,11 +193,24 @@
 <div class="w-full max-w-7xl mx-auto p-4">
   <!-- Search Card -->
   <div class="bg-white border border-gray-200 rounded-2xl shadow-sm p-5">
-    <div class="mb-5">
-      <h2 class="text-2xl font-bold text-gray-800">Recheck Case Search</h2>
-      <p class="text-sm text-gray-500 mt-1">
-        Search all paper entries using Recheck Case ID
-      </p>
+    <div class="mb-5 flex items-start justify-between gap-4">
+      <div>
+        <h2 class="text-2xl font-bold text-gray-800">
+          Recheck Case Search
+        </h2>
+
+        <p class="text-sm text-gray-500 mt-1">
+          Search all paper entries using Recheck Case ID
+        </p>
+      </div>
+
+      <button
+        on:click={gotoVerificationDashboard}
+        type="button"
+        class="bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium px-4 py-2 rounded-lg shadow-sm transition"
+      >
+        Verification Dashboard
+      </button>
     </div>
 
     <form
