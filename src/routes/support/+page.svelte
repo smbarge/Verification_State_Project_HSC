@@ -195,9 +195,7 @@
   <div class="bg-white border border-gray-200 rounded-2xl shadow-sm p-5">
     <div class="mb-5 flex items-start justify-between gap-4">
       <div>
-        <h2 class="text-2xl font-bold text-gray-800">
-          Recheck Case Search
-        </h2>
+        <h2 class="text-2xl font-bold text-gray-800">Recheck Case Search</h2>
 
         <p class="text-sm text-gray-500 mt-1">
           Search all paper entries using Recheck Case ID
@@ -332,8 +330,8 @@
                   {#if row.paper_id === records[0].paper_id}
                     <button
                       on:click={() => revertApplication(row)}
-                      disabled={!row.answersheet_url}
-                      class={row.answersheet_url
+                      disabled={!row.answersheet_url && !row.final_status}
+                      class={row.answersheet_url || row.final_status
                         ? "bg-blue-500 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-all"
                         : "bg-gray-300 py-2 px-4 rounded-lg text-gray-500 cursor-not-allowed"}
                     >
