@@ -2038,6 +2038,51 @@ const confirmChangeReport = async ({ division, recheckCaseId }) => {
     return { error: -1, errorMsg: e };
   }
 };
+
+const getPaperStatusByCaseId = async ({ recheckCaseId }) => {
+  const currentToken = get(token);
+
+  let url = new URL(
+    `${apiServer}/paper-status/${recheckCaseId}`
+  );
+
+  try {
+    let reply = await fetch(url.toString(), {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${currentToken}`,
+      },
+    });
+
+    if (reply.status != 200) {
+      const responseResult = await reply.json();
+      throw Error(responseResult.message);
+    }
+
+    const responseResult = await reply.json();
+
+    const { status, data, message } = responseResult;
+
+    return {
+      status,
+      data,
+      message,
+    };
+  } catch (e) {
+    console.log(
+      "api.getPaperStatusByCaseId failed with error :",
+      e
+    );
+
+    return {
+      status: 500,
+      data: [],
+      message: e.message,
+    };
+  }
+};
+
 export let api = {
   getUserInfo,
   getAllUIDList,
@@ -2102,4 +2147,5 @@ export let api = {
   deleteAnswerSheetUrl,
   deleteChangeReport,
   confirmChangeReport,
+  getPaperStatusByCaseId,
 };

@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import VerificationCard from "$lib/components/VerificationCard.svelte";
   import { A } from "flowbite-svelte";
+  import { goto } from "$app/navigation";
 
   let selected_division_code = -1;
   let date = "";
@@ -15,6 +16,8 @@
   let seatNo = "";
   let caseSeatNo = "";
   let alerMsgcase = "";
+  let showPopup = false;
+  let resultSeatNo = [];
   // Replace this with your actual search function
   async function searchCase() {
     if (caseSeatNo.trim() === "") {
@@ -36,12 +39,24 @@
       caseSeatNo = "";
       return;
     }
-    seatNo = data.seatNo;
+    resultSeatNo = data.seatNo;
     // Example logic
     alerMsgcase = "";
+    showPopup = true;
     // perform your search logic here
     console.log("Searching for seat no:", caseSeatNo);
   }
+
+  const gotoSupport = () => {
+    goto("./support");
+  };
+
+    const accentMap = {
+    blue:   "bg-blue-500",
+    green:  "bg-green-500",
+    violet: "bg-violet-500",
+  };
+
   let selected_division = -1;
   const downloadCSV = async () => {
     console.log("downloadCSV function called");
@@ -192,30 +207,29 @@
 
   async function csvDownload() {
     try {
-        const response = await fetch('/api/report');
+      const response = await fetch("/api/report");
 
-        if (!response.ok) {
-            throw new Error('Download failed');
-        }
+      if (!response.ok) {
+        throw new Error("Download failed");
+      }
 
-        const blob = await response.blob();
+      const blob = await response.blob();
 
-        const url = window.URL.createObjectURL(blob);
+      const url = window.URL.createObjectURL(blob);
 
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'hsc_report.xlsx';
-        document.body.appendChild(a);
-        a.click();
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "hsc_report.xlsx";
+      document.body.appendChild(a);
+      a.click();
 
-        a.remove();
-        window.URL.revokeObjectURL(url);
-
+      a.remove();
+      window.URL.revokeObjectURL(url);
     } catch (error) {
-        console.error(error);
-        alert('Failed to download report');
+      console.error(error);
+      alert("Failed to download report");
     }
-}
+  }
 
   function convertToCSV(data) {
     let divisionName = divisions.find(
@@ -628,24 +642,209 @@
         incomplete_applications: 0,
       };
 </script>
+<!-- <div class="max-w-6xl mx-auto px-4 py-8">
+  <div class="text-center mb-8">
+    <h1 class="text-xl font-semibold text-slate-800 tracking-tight">
+      Verification Photocopy &amp; Re-evaluation
+    </h1>
+    <p class="text-xs text-slate-500 mt-1 tracking-wide uppercase">Data Download Portal</p>
+  </div>
 
-<div class="max-w-4xl mx-auto p-4">
-  <h1 class="text-2xl font-bold mb-4">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+
+    <div class="bg-white rounded-2xl border border-slate-100 p-4 flex flex-col gap-3 shadow-sm">
+      <div class="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center">
+        <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      </div>
+      <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Division Details</p>
+      <div class="h-px bg-slate-50"></div>
+      <select
+        id="division1"
+        bind:value={selected_division_code}
+        class="w-full h-9 border border-slate-200 rounded-lg text-sm px-2 bg-slate-50 text-slate-700 focus:border-blue-400 focus:outline-none"
+      >
+        <option value="" disabled selected>Select a division</option>
+        {#each divisions as { division_code, division_name }}
+          <option value={division_code}>{division_name}</option>
+        {/each}
+      </select>
+      <button
+        on:click={downloadCSV}
+        type="button"
+        disabled={disableDownload}
+        class="w-full h-9 flex items-center justify-center gap-1.5 rounded-lg text-sm font-semibold text-white bg-gradient-to-br from-blue-500 to-indigo-500 hover:opacity-90 active:scale-95 transition disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed"
+      >
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download
+      </button>
+      <span class="inline-flex items-center gap-1 text-[10px] font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full w-fit">CSV Export</span>
+      {#if alertMsg}
+        <div class="p-2 bg-red-50 text-red-600 rounded-lg text-xs">{alertMsg}</div>
+      {/if}
+    </div>
+
+    <div class="bg-white rounded-2xl border border-slate-100 p-4 flex flex-col gap-3 shadow-sm">
+      <div class="w-9 h-9 rounded-xl bg-teal-50 flex items-center justify-center">
+        <svg class="w-4 h-4 text-teal-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      </div>
+      <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Payment Details</p>
+      <div class="h-px bg-slate-50"></div>
+      <select
+        id="division2"
+        bind:value={selected_division}
+        class="w-full h-9 border border-slate-200 rounded-lg text-sm px-2 bg-slate-50 text-slate-700 focus:border-teal-400 focus:outline-none"
+      >
+        <option value="" disabled selected>Select a division</option>
+        {#each divisions as { division_code, division_name }}
+          <option value={division_code}>{division_name}</option>
+        {/each}
+      </select>
+      <button
+        on:click={downloadPayment}
+        type="button"
+        disabled={disableDownload1}
+        class="w-full h-9 flex items-center justify-center gap-1.5 rounded-lg text-sm font-semibold text-white bg-gradient-to-br from-teal-400 to-cyan-500 hover:opacity-90 active:scale-95 transition disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed"
+      >
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download
+      </button>
+      <span class="inline-flex items-center gap-1 text-[10px] font-semibold text-teal-700 bg-teal-50 px-2 py-0.5 rounded-full w-fit">Payment CSV</span>
+      {#if alertMsg1}
+        <div class="p-2 bg-red-50 text-red-600 rounded-lg text-xs">{alertMsg1}</div>
+      {/if}
+    </div>
+
+    <div class="bg-white rounded-2xl border border-slate-100 p-4 flex flex-col gap-3 shadow-sm">
+      <div class="w-9 h-9 rounded-xl bg-violet-50 flex items-center justify-center">
+        <svg class="w-4 h-4 text-violet-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </div>
+      <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Search Recheck Case ID</p>
+      <div class="h-px bg-slate-50"></div>
+      <div class="relative">
+        <input
+          id="seatNo"
+          type="text"
+          bind:value={caseSeatNo}
+          placeholder="Enter Recheck Case ID"
+          class="w-full h-9 pl-3 pr-10 border border-slate-200 rounded-lg bg-slate-50 text-sm text-slate-700 focus:border-violet-400 focus:outline-none"
+        />
+        <div
+          class="absolute inset-y-0 right-3 flex items-center cursor-pointer text-slate-400 hover:text-violet-500"
+          on:click={searchCase}
+        >
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 103.75 3.75a7.5 7.5 0 0012.9 12.9z"/></svg>
+        </div>
+      </div>
+      <span class="inline-flex items-center gap-1 text-[10px] font-semibold text-violet-700 bg-violet-50 px-2 py-0.5 rounded-full w-fit">Case Lookup</span>
+
+      {#if showPopup}
+        <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-5 py-4 flex justify-between items-center">
+              <div>
+                <h2 class="text-base font-bold">Search Results</h2>
+                <p class="text-xs text-blue-100">Total Records: {resultSeatNo.length}</p>
+              </div>
+              <button class="text-white text-lg hover:text-red-200" on:click={() => (showPopup = false)}>✕</button>
+            </div>
+            <div class="p-4 max-h-72 overflow-y-auto">
+              {#if resultSeatNo.length > 0}
+                <div class="space-y-2">
+                  {#each resultSeatNo as seat, index}
+                    <div class="flex items-center gap-3 p-3 border border-slate-100 rounded-xl hover:bg-blue-50 transition">
+                      <div class="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs font-semibold">{index + 1}</div>
+                      <p class="font-medium text-slate-800 text-sm">{seat.seat_no}</p>
+                    </div>
+                  {/each}
+                </div>
+              {:else}
+                <div class="text-center py-6 text-slate-400 text-sm">No records found</div>
+              {/if}
+            </div>
+            <div class="bg-slate-50 px-4 py-3 flex justify-end">
+              <button class="px-5 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition" on:click={() => (showPopup = false)}>Close</button>
+            </div>
+          </div>
+        </div>
+      {/if}
+    </div>
+
+    <div class="bg-white rounded-2xl border border-slate-100 p-4 flex flex-col gap-3 shadow-sm">
+      <div class="w-9 h-9 rounded-xl bg-orange-50 flex items-center justify-center">
+        <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      </div>
+      <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">IT Subject Details</p>
+      <div class="h-px bg-slate-50"></div>
+      <p class="text-xs text-slate-400 flex-1">Download subject-wise IT data for online candidates.</p>
+      <button
+        on:click={onlineSubjectData}
+        type="button"
+        disabled={disableDownload1}
+        class="w-full h-9 flex items-center justify-center gap-1.5 rounded-lg text-sm font-semibold text-white bg-gradient-to-br from-blue-500 to-indigo-500 hover:opacity-90 active:scale-95 transition disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed"
+      >
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download
+      </button>
+      <span class="inline-flex items-center gap-1 text-[10px] font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full w-fit">Subject Data</span>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-slate-100 p-4 flex flex-col gap-3 shadow-sm">
+      <div class="w-9 h-9 rounded-xl bg-green-50 flex items-center justify-center">
+        <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      </div>
+      <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Report</p>
+      <div class="h-px bg-slate-50"></div>
+      <p class="text-xs text-slate-400 flex-1">Generate and download the full recheck summary report.</p>
+      <button
+        on:click={csvDownload}
+        type="button"
+        class="w-full h-9 flex items-center justify-center gap-1.5 rounded-lg text-sm font-semibold text-white bg-gradient-to-br from-teal-400 to-cyan-500 hover:opacity-90 active:scale-95 transition"
+      >
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download
+      </button>
+      <span class="inline-flex items-center gap-1 text-[10px] font-semibold text-teal-700 bg-teal-50 px-2 py-0.5 rounded-full w-fit">Full Report</span>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-slate-100 p-4 flex flex-col gap-3 shadow-sm">
+      <div class="w-9 h-9 rounded-xl bg-rose-50 flex items-center justify-center">
+        <svg class="w-4 h-4 text-rose-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 18v-6a9 9 0 0118 0v6"/><path d="M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3zM3 19a2 2 0 002 2h1a2 2 0 002-2v-3a2 2 0 00-2-2H3z"/></svg>
+      </div>
+      <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Go to Support Page</p>
+      <div class="h-px bg-slate-50"></div>
+      <p class="text-xs text-slate-400 flex-1">Navigate to support for recheck revert actions.</p>
+      <button
+        on:click={gotoSupport}
+        type="button"
+        class="w-full h-9 flex items-center justify-center gap-1.5 rounded-lg text-sm font-semibold text-white bg-gradient-to-br from-rose-500 to-pink-500 hover:opacity-90 active:scale-95 transition"
+      >
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        Recheck Revert
+      </button>
+      <span class="inline-flex items-center gap-1 text-[10px] font-semibold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full w-fit">Support</span>
+    </div>
+
+  </div>
+</div> -->
+ <div class="max-w-7xl mx-auto p-4">
+  <h1 class="text-2xl font-bold mb-5 text-center">
     Verification Photocopy And Re-evaluation Data Download
   </h1>
 
-  <div class="flex space-x-4">
-    <form class="space-y-4 flex-1">
+  <div class="flex gap-4 items-start justify-center">
+    <form class="space-y-3 w-[180px]">
       <div>
-        <label for="division1" class="block text-sm font-medium text-gray-700"
-          >Division Details</label
-        >
+        <label for="division1" class="block text-sm font-medium text-gray-700">
+          Division Details
+        </label>
+
         <select
           id="division1"
           bind:value={selected_division_code}
-          class="mt-1 block w-full h-8 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+          class="mt-1 block w-full h-9 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-2"
         >
           <option value="" disabled selected>Select a division</option>
+
           {#each divisions as { division_code, division_name }}
             <option value={division_code}>{division_name}</option>
           {/each}
@@ -657,29 +856,32 @@
           on:click={downloadCSV}
           type="button"
           disabled={disableDownload}
-          class="w-full bg-blue-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full h-9 bg-blue-500 text-white text-sm rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           Download
         </button>
+
         {#if alertMsg}
-          <div class="mt-3 p-3 bg-red-200 rounded">
+          <div class="mt-2 p-2 bg-red-200 rounded text-sm">
             {alertMsg}
           </div>
         {/if}
       </div>
     </form>
 
-    <form class="space-y-4 flex-1">
+    <form class="space-y-3 w-[180px]">
       <div>
-        <label for="division2" class="block text-sm font-medium text-gray-700"
-          >Payment Details</label
-        >
+        <label for="division2" class="block text-sm font-medium text-gray-700">
+          Payment Details
+        </label>
+
         <select
           id="division2"
           bind:value={selected_division}
-          class="mt-1 block w-full h-8 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+          class="mt-1 block w-full h-9 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-2"
         >
           <option value="" disabled selected>Select a division</option>
+
           {#each divisions as { division_code, division_name }}
             <option value={division_code}>{division_name}</option>
           {/each}
@@ -691,36 +893,40 @@
           on:click={downloadPayment}
           type="button"
           disabled={disableDownload1}
-          class="w-full bg-blue-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full h-9 bg-blue-500 text-white text-sm rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           Download
         </button>
+
         {#if alertMsg1}
-          <div class="mt-3 p-3 bg-red-200 rounded">
+          <div class="mt-2 p-2 bg-red-200 rounded text-sm">
             {alertMsg1}
           </div>
         {/if}
       </div>
     </form>
-    <form class="space-y-4 flex-2">
-      <!-- Case Seat No Search -->
+
+   
+
+    <form class="space-y-2 w-[220px]">
       <div>
         <label for="seatNo" class="block text-sm font-medium text-gray-700">
           Search Recheck Case ID
         </label>
+
         <div class="relative">
           <input
             id="seatNo"
             type="text"
             bind:value={caseSeatNo}
             placeholder="Enter Recheck Case ID"
-            class="mt-1 block w-full h-8 pr-10 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+            class="mt-1 block w-full h-9 pl-3 pr-12 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
           />
+
           <div
-            class="absolute inset-y-0 right-2 flex items-center cursor-pointer text-gray-500 hover:text-blue-600"
+            class="absolute inset-y-0 right-3 flex items-center cursor-pointer text-gray-500 hover:text-blue-600"
             on:click={searchCase}
           >
-            <!-- SVG Search Icon -->
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-5 w-5"
@@ -739,74 +945,130 @@
         </div>
       </div>
 
-      {#if seatNo?.length > 0}
+      {#if showPopup}
         <div
-          class="mt-3 p-3 flex justify-center items-center bg-green-200 rounded"
+          class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
         >
-          {seatNo}
+          <div
+            class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden"
+          >
+            <div
+              class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-5 py-4 flex justify-between items-center"
+            >
+              <div>
+                <h2 class="text-lg font-bold">Search Results</h2>
+                <p class="text-sm text-blue-100">
+                  Total Records: {resultSeatNo.length}
+                </p>
+              </div>
+
+              <button
+                class="text-white text-xl hover:text-red-200"
+                on:click={() => (showPopup = false)}
+              >
+                ✕
+              </button>
+            </div>
+
+            <div class="p-4 max-h-80 overflow-y-auto">
+              {#if resultSeatNo.length > 0}
+                <div class="space-y-2">
+                  {#each resultSeatNo as seat, index}
+                    <div
+                      class="flex items-center gap-3 p-3 border rounded-lg hover:bg-blue-50 transition"
+                    >
+                      <div
+                        class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm font-semibold"
+                      >
+                        {index + 1}
+                      </div>
+
+                      <div class="flex-1">
+                        <p class="font-medium text-gray-800">
+                          {seat.seat_no}
+                        </p>
+                      </div>
+                    </div>
+                  {/each}
+                </div>
+              {:else}
+                <div class="text-center py-6 text-gray-500">
+                  No records found
+                </div>
+              {/if}
+            </div>
+
+            <div class="bg-gray-50 px-4 py-3 flex justify-end">
+              <button
+                class="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                on:click={() => (showPopup = false)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
         </div>
       {/if}
-      {#if alerMsgcase}
-        <div
-          class="mt-3 p-3 flex justify-center items-center bg-red-200 rounded"
-        >
-          {alerMsgcase}
-        </div>
-      {/if}
+
+  
     </form>
-    <form class="space-y-4 flex-1">
+
+    <form class="space-y-3 w-[150px]">
       <div>
-        <label
-          for="division2"
-          class="block text-sm flex justify-center text-center mt-9 font-medium text-gray-700"
-        >
-          IT Subject Details</label
-        >
+        <label class="block text-sm text-center font-medium text-gray-700 mt-1">
+          IT Subject Details
+        </label>
       </div>
 
-      <div>
+      <div class="pt-8">
         <button
           on:click={onlineSubjectData}
           type="button"
           disabled={disableDownload1}
-          class="w-full bg-blue-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full h-9 bg-blue-500 text-white text-sm rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           Download
         </button>
-        <!-- {#if alertMsg1}
-          <div class="mt-3 p-3 bg-red-200 rounded">
-            {alertMsg1}
-          </div>
-        {/if} -->
       </div>
     </form>
-    <form class="space-y-4 flex-1">
+
+    <form class="space-y-3 w-[140px]">
       <div>
-        <label
-          for="division2"
-          class="block text-sm flex justify-center text-center mt-9 font-medium text-gray-700"
-        >
+        <label class="block text-sm text-center font-medium text-gray-700 mt-1">
           Report
         </label>
       </div>
 
-      <div>
+      <div class="pt-8">
         <button
           on:click={csvDownload}
           type="button"
-          class="w-full bg-blue-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full h-9 bg-blue-500 text-white text-sm rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           Download
         </button>
-        <!-- {#if alertMsg1}
-          <div class="mt-3 p-3 bg-red-200 rounded">
-            {alertMsg1}
-          </div>
-        {/if} -->
+      </div>
+    </form>
+
+    <form class="space-y-3 w-[170px]">
+      <div>
+        <label class="block text-sm text-center font-medium text-gray-700 mt-1">
+          Go to Support Page
+        </label>
+      </div>
+
+      <div class="pt-8">
+        <button
+          on:click={gotoSupport}
+          type="button"
+          class="w-full h-9 bg-blue-500 text-white text-sm rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          Recheck Revert
+        </button>
       </div>
     </form>
   </div>
-</div>
+</div> 
 
 <div class="p-4 bg-white shadow rounded-lg">
   <h3 class="text-lg font-semibold">Maharashtra State</h3>

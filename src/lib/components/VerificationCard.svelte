@@ -75,3 +75,56 @@
     </div>
   </div>
 </div>
+<!-- 
+<script>
+  export let title = "Title";
+  export let TotalCount;
+  export let CompletedCount;
+  export let PendingCount;
+
+  $: completedPct = TotalCount > 0 ? (CompletedCount / TotalCount) * 100 : 0;
+  $: pendingPct = TotalCount > 0 ? (PendingCount / TotalCount) * 100 : 0;
+</script>
+
+<div class="bg-white border border-slate-100 rounded-2xl p-4 overflow-hidden">
+
+  <div class="h-1 w-full rounded-full bg-blue-500 mb-4"></div>
+
+  <h3 class="text-[11px] font-semibold uppercase tracking-widest text-slate-400 mb-1">
+    Overview
+  </h3>
+  <p class="text-base font-semibold text-slate-800 mb-4">{title}</p>
+
+  <div class="grid grid-cols-3 gap-2">
+
+    <div class="bg-slate-50 border border-slate-100 rounded-xl p-2 text-center">
+      <p class="text-[10px] font-semibold uppercase tracking-wider text-blue-600 mb-1">Total</p>
+      <p class="text-2xl font-semibold text-slate-800 leading-none">{TotalCount ?? '—'}</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-100 rounded-xl p-2 text-center">
+      <p class="text-[10px] font-semibold uppercase tracking-wider text-green-700 mb-1">Completed</p>
+      <p class="text-2xl font-semibold text-slate-800 leading-none">{CompletedCount ?? '—'}</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-100 rounded-xl p-2 text-center">
+      <p class="text-[10px] font-semibold uppercase tracking-wider text-amber-600 mb-1">Pending</p>
+      <p class="text-2xl font-semibold text-slate-800 leading-none">{PendingCount ?? '—'}</p>
+    </div>
+
+  </div>
+
+  {#if TotalCount > 0}
+    <div class="flex gap-1 mt-3 h-1.5 rounded-full overflow-hidden">
+      <div
+        class="bg-green-500 rounded-full h-full transition-all duration-500"
+        style="width: {completedPct}%"
+      ></div>
+      <div
+        class="bg-amber-400 rounded-full h-full transition-all duration-500"
+        style="width: {pendingPct}%"
+      ></div>
+    </div>
+  {/if}
+
+</div> -->
