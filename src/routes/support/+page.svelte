@@ -112,6 +112,30 @@
       },
     );
   };
+    const revertChangeUrl = async (row) => {
+    try {
+      const response = await fetch("/api/revertcase", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          recheck_case_id: row.recheck_case_id,
+          paper_id: row.paper_id,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.status !== 200) {
+        showAlert(result.message || "Failed to revert", "error");
+        return;
+      }
+      showAlert("remove Change Url successfully", "success");
+    } catch (e) {
+      console.log("error in revertChangeUrl", e);
+    }
+  };
 </script>
 
 <!-- ───── Popup Modal ───── -->
@@ -326,8 +350,8 @@
                     ? "-"
                     : row.final_status}
                 </td>
-                <td class="px-4 py-3">
-                  {#if row.paper_id === records[0].paper_id}
+                 <td class="px-4 py-3">
+                  <div class="flex gap-2">
                     <button
                       on:click={() => revertApplication(row)}
                       disabled={!row.answersheet_url && !row.final_status}
@@ -337,8 +361,20 @@
                     >
                       Application Revert
                     </button>
-                  {/if}
-                </td>
+
+                    {#if row.final_status == "ChangeLetterGenerated"}
+                      <button
+                        on:click={() => revertChangeUrl(row)}
+                        disabled={!row.answersheet_url && !row.final_status}
+                        class={row.answersheet_url || row.final_status
+                          ? "bg-blue-500 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-all"
+                          : "bg-gray-300 py-2 px-4 rounded-lg text-gray-500 cursor-not-allowed"}
+                      >
+                        Change Url Revert
+                      </button>
+                    {/if}
+                  </div>
+                </td> 
                 <!-- <td class="px-4 py-3">
                   <button
                     on:click={() => revertApplication(row)}

@@ -119,3 +119,62 @@ export async function PUT({ request }) {
     );
   }
 }
+
+export async function POST({ request }) {
+  try {
+    const body = await request.json();
+
+    const { recheck_case_id, paper_id } = body;
+
+    if (!recheck_case_id || !paper_id) {
+      return new Response(
+        JSON.stringify({
+          status: 400,
+          message: "Missing required fields",
+        }),
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+    }
+
+    await queryDb(
+      `
+  UPDATE public.paper_status
+  SET
+    change_report_url = NULL,
+    change_confirmation = false
+  WHERE recheck_case_id = '${recheck_case_id}'
+  AND paper_id = '${paper_id}'
+  `,
+    );
+
+    return new Response(
+      JSON.stringify({
+        status: 200,
+        message: "change Url reverted successfully",
+      }),
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+  } catch (err) {
+    console.log("post ERROR :", err);
+
+    return new Response(
+      JSON.stringify({
+        status: 500,
+        message: "Internal Server Error",
+      }),
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+  }
+}
