@@ -8,7 +8,7 @@ export async function queryDb(query) {
   try {
     let DATABASE_URL =
       // "postgres://verification_user:Admin@2026@172.31.24.102:5432/hsc_verification_db";
-      "postgres://verification_user:Admin@2026@13.203.68.236:5432/hsc_verification_db";
+      "postgres://verification_user:Admin@2026@172.31.21.123:5432/hsc_verification_july_2026_db";
     // "postgres://verification_user:Admin@2026@13.201.171.187:5432/hsc_verification_db";
     client = new Client({
       connectionString: DATABASE_URL,
